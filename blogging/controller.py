@@ -53,3 +53,13 @@ class Controller:
         self.blog_collection[old_id] = None
 
         return self.blog_collection[new_id]
+
+    def retrieve_blogs(self, name):
+        blogs = []
+        if(not self.logged_in):
+            return
+        for each in self.blog_collection:
+            if name is each.self.name:
+                blogs.append(each)
+
+        return blogs
