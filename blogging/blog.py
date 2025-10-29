@@ -4,3 +4,4 @@ class Blog:
         self.name = name
         self. url = url
         self.email = email
+
