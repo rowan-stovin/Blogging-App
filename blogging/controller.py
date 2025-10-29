@@ -22,7 +22,7 @@ class Controller:
 
         return True
     
-    def login(self, username, password):
+    def login(self, username: str, password: str):
         if self.login_flag:
             return False
         elif not username == self.username:
@@ -32,3 +32,14 @@ class Controller:
         else:
             return True
         
+    def create_blog(self, id: int, name: str, url: str, email: str):
+        if not self.login_flag:
+            return None
+        
+        self.blog_collection[id] = Blog(id, name, url, email)
+        return self.blog_collection[id]
+
+    def search_blog(self, id: int):
+        return self.blog_collection[id]
+        
+
