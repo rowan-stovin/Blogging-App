@@ -7,6 +7,12 @@ class Controller:
         self.username = ""
         self.password = ""
     
+    def set_username(self, username: str):
+        self.username = username
+
+    def set_password(self, password: int):
+        self.password = password
+
     def logout(self):
         return self.login_flag
     
