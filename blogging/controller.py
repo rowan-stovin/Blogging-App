@@ -4,8 +4,8 @@ from post import Post
 class Controller:
     def __init__(self):
         self.login_flag = False
-        self.username = ""
-        self.password = ""
+        self.username = None
+        self.password = None
     
     def set_username(self, username: str):
         self.username = username
@@ -17,17 +17,17 @@ class Controller:
         if not self.login_flag:
             return False
         
-        set.password = None
-        set.username = None
+        self.set_password = None
+        self.set_username = None
 
         return True
     
     def login(self, username, password):
-        if(self.login_flag):
+        if self.login_flag:
             return False
-        elif(not username.equals(self.username)):
+        elif not username == self.username:
             return False
-        elif(not password.equals(self.password)):
+        elif not password == self.password:
             return False
         else:
             return True
