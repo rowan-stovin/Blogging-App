@@ -14,14 +14,21 @@ class Controller:
         self.password = password
 
     def logout(self):
-        return self.login_flag
+        if not self.login_flag:
+            return False
+        
+        set.password = None
+        set.username = None
+
+        return True
     
     def login(self, username, password):
         if(self.login_flag):
-            return "cannot login again while still logged in"
+            return False
         elif(not username.equals(self.username)):
-            return "login in with incorrect username"
+            return False
         elif(not password.equals(self.password)):
-            return "login in with incorrect password"
-        
+            return False
+        else:
+            return True
         
