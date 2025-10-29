@@ -42,4 +42,11 @@ class Controller:
     def search_blog(self, id: int):
         return self.blog_collection[id]
         
+    def update_blog(self, old_id: int, new_id: int, name: str, url: str, email: str):
+        if old_id == new_id:
+            return self.blog_collection[old_id]
+        
+        self.blog_collection[new_id] = self.create_blog(new_id, name, url, email)
+        self.blog_collection[old_id] = None
 
+        return self.blog_collection[new_id]
