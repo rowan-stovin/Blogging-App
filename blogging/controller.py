@@ -4,15 +4,22 @@ from blogging.post import Post
 class Controller:
     def __init__(self):
         self.logged_in = False
-        self.username = None
-        self.password = None
+        self.username = "user"
+        self.password = "blogging2025"
         self.blog_collection = {}
+        self.current_blog = None
     
+
     def set_username(self, username: str) -> None:
         self.username = username
 
+
     def set_password(self, password: int) -> None:
         self.password = password
+
+    def set_current_blog(self, new_id: int):
+        raise NotImplementedError # I gotta go to sleep
+
 
     def logout(self) -> bool:
         if not self.logged_in:
@@ -24,6 +31,7 @@ class Controller:
 
         return True
 
+
     def login(self, username: str, password: str) -> bool:
         # Can't login if already logged in
         if self.logged_in:
@@ -34,6 +42,7 @@ class Controller:
         self.logged_in = True
         return True
 
+
     def create_blog(self, id: int, name: str, url: str, email: str) -> Blog:
         # If user isn't logged in, or blog already exists
         if not self.logged_in or self.blog_collection[id]:
@@ -42,8 +51,10 @@ class Controller:
         self.blog_collection[id] = Blog(id, name, url, email)
         return self.blog_collection[id]
 
+
     def search_blog(self, id: int) -> Blog:
         return self.blog_collection.get(id)
+
 
     def update_blog(self, old_id: int, new_id: int, name: str, url: str, email: str) -> bool:
         # We don't want to update to an existing id, unless we are modifying a blog and keeping same id.
@@ -75,3 +86,15 @@ class Controller:
             return
         
         return [blog for blog in self.blog_collection.values()]
+
+
+
+    # Post methods
+
+    def create_post(self, code:int, title: str, text: str) -> Post:
+        if not self.logged_in:
+            return
+
+        raise NotImplementedError
+        return Post()
+
