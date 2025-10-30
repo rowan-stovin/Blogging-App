@@ -1,5 +1,5 @@
-from blog import Blog
-from post import Post
+from blogging.blog import Blog
+from blogging.post import Post
 
 class Controller:
     def __init__(self):
