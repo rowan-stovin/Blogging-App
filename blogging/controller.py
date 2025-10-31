@@ -72,9 +72,9 @@ class Controller:
     def update_blog(self, old_id: int, new_id: int, name: str, url: str, email: str) -> bool:
         if not self.logged_in or not self.blog_collection:
             return False
-        
+
         #cannot update current blog
-        if self.current_blog == self.blog_collection.get(new_id):
+        if self.current_blog == self.blog_collection.get(new_id) and self.current_blog:
             return False
 
         # We don't want to update to an existing id, unless we are modifying a blog and keeping same id.
