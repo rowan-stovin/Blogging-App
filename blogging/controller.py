@@ -131,6 +131,7 @@ class Controller:
     # Post methods
 
     def create_post(self, title: str, text: str) -> Post:
+        # We could probably make this into a helper method if we wanted to.
         if not self.logged_in or not self.current_blog:
             return
 
@@ -153,13 +154,33 @@ class Controller:
 
         return self.current_blog.post_collection.get(code)
 
+
     def delete_post(self, code: int):
-        raise NotImplementedError
+        """A method to delete a post in the current blog with a given code. Does not shift post code..."""
+        if not self.logged_in or not self.current_blog:
+            return False
+        
+        if not self.current_blog.post_collection.get(code):
+            return False
+
+        # NOTE: Do we need to shift post code's if we delete a post?
+        # I don't think we do, because this method passes tests.
+        del self.current_blog.post_collection[code]
+        return True
 
 
-    def list_posts(self):
-        raise NotImplementedError
+    def list_posts(self) -> list[Post]:
+        """A method that returns the current blog's post collection (as a list)."""
+        if not self.logged_in or not self.current_blog:
+            return
+
+        # A list of the posts, reversed with string slicing.
+        return list(self.current_blog.post_collection.values())[::-1]
 
 
-    def retrieve_posts(self, blog: Blog):
-        raise NotImplementedError
+    def retrieve_posts(self, keyword: str) -> list[Post]:
+        """A method to return all posts in the current blog that have keyword in the title or text."""
+        if not self.logged_in or not self.current_blog:
+            return
+        
+        return [p for p in self.current_blog.post_collection.values() if keyword in p.title or keyword in p.text]
