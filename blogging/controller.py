@@ -67,8 +67,8 @@ class Controller:
         if self.blog_collection.get(new_id) and old_id != new_id:
             return False
 
-        # We update values even if id is same
-        self.blog_collection[new_id] = self.create_blog(new_id, name, url, email)
+        # We update values even if id is the same
+        self.blog_collection[new_id] = Blog(new_id, name, url, email)
 
         # Delete old (if exists) if not same as new (because it hasn't been overridden)
         if old_id != new_id and self.blog_collection.get(old_id):
@@ -80,18 +80,8 @@ class Controller:
     def delete_blog(self):
         raise NotImplementedError
 
-
     def search_blog(self, id: int) -> Blog:
         return self.blog_collection.get(id)
-
-    def update_blog(self, old_id: int, new_id: int, name: str, url: str, email: str):
-        if old_id == new_id:
-            return self.blog_collection.get(old_id)
-
-        self.blog_collection[new_id] = self.create_blog(new_id, name, url, email)
-        self.blog_collection[old_id] = None
-
-        return self.blog_collection.get(new_id)
 
     def retrieve_blogs(self, keyword) -> list[Blog]:
         if not self.logged_in:
