@@ -53,9 +53,9 @@ class Controller:
 
     #gets current blog
     def get_current_blog(self):
-        if(self.logged_in):
+        if self.logged_in:
             return self.current_blog
-        
+
         #maybe return False
         return None
 
@@ -73,7 +73,7 @@ class Controller:
         if not self.logged_in or not self.blog_collection:
             return False
 
-        #cannot update current blog
+        # Cannot update current blog (if there is a current blog)
         if self.current_blog == self.blog_collection.get(new_id) and self.current_blog:
             return False
 
@@ -100,7 +100,7 @@ class Controller:
             return False
         elif blog == self.current_blog:
             return False
-        
+
         del self.blog_collection[id]
         return True
 
@@ -131,12 +131,27 @@ class Controller:
     # Post methods
 
     def create_post(self, title: str, text: str) -> Post:
+        if not self.logged_in or not self.current_blog:
+            return
+
+        # NOTE: There is probably a cleaner way to do this.
+        # The post number ("code") is the 1-th index for the blog's posts.
+        # We could probably change this field name in post.py, would be more readable.
+
+        code = len(self.current_blog.post_collection) + 1
+        post = Post(code, title, text)
+        self.current_blog.post_collection[code] = post
+
+        return post
+
+    def update_post(self, code: int, title: str, text: str):
         raise NotImplementedError
+    
+    def search_post(self, code: int) -> Post:
+        if not self.logged_in or not self.current_blog:
+            return
 
-
-    def update_post(self, code:int, title: str, text: str):
-        raise NotImplementedError
-
+        return self.current_blog.post_collection.get(code)
 
     def delete_post(self, code: int):
         raise NotImplementedError

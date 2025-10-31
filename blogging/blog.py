@@ -4,6 +4,7 @@ class Blog:
         self.name = name
         self. url = url
         self.email = email
+        self.post_collection = {}
 
     def __eq__(self, other) -> bool:
         # This might not be right...
