@@ -42,12 +42,20 @@ class Controller:
 
     # Blog methods
 
-    def set_current_blog(self, new_id: int):
-        raise NotImplementedError
+    def set_current_blog(self, cur_id: int):
+        
+        #should something be returned?
+        self.current_blog = self.search_blog(cur_id)
 
-
+    def unset_current_blog(self):
+        self.current_blog = None
+        
     def get_current_blog(self):
-        raise NotImplementedError
+        if(self.logged_in):
+            return self.current_blog
+        
+        #maybe return False
+        return None
 
 
     def create_blog(self, id: int, name: str, url: str, email: str) -> Blog:
@@ -61,6 +69,10 @@ class Controller:
 
     def update_blog(self, old_id: int, new_id: int, name: str, url: str, email: str) -> bool:
         if not self.logged_in or not self.blog_collection:
+            return False
+        
+        #cannot update current blog
+        if self.current_blog == self.blog_collection.get(new_id):
             return False
 
         # We don't want to update to an existing id, unless we are modifying a blog and keeping same id.
@@ -78,7 +90,17 @@ class Controller:
 
 
     def delete_blog(self, id: int) -> bool:
-        raise NotImplementedError
+        blog = self.search_blog(id)
+
+        if not self.logged_in:
+            return False
+        elif blog == None:
+            return False
+        elif blog == self.current_blog:
+            return False
+        
+        del self.blog_collection[id]
+        return True
 
     def search_blog(self, id: int) -> Blog:
         return self.blog_collection.get(id)
