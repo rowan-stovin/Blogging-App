@@ -146,7 +146,19 @@ class Controller:
         return post
 
     def update_post(self, code: int, title: str, text: str):
-        raise NotImplementedError
+        if not self.logged_in or not self.current_blog:
+            return False
+        
+        # No current Blog
+        if self.current_blog == None:
+            return False
+        
+        # No posts to update
+        if self.current_blog.post_collection == {}:
+            return False
+        
+        self.current_blog.post_collection[code] = self.create_post(title, text)
+        return True
     
     def search_post(self, code: int) -> Post:
         if not self.logged_in or not self.current_blog:
