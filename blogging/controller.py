@@ -71,13 +71,13 @@ class Controller:
         self.blog_collection[new_id] = Blog(new_id, name, url, email)
 
         # Delete old (if exists) if not same as new (because it hasn't been overridden)
-        if old_id != new_id and self.blog_collection.get(old_id):
+        if self.blog_collection.get(old_id) and old_id != new_id:
             del self.blog_collection[old_id]
 
         return True
 
 
-    def delete_blog(self):
+    def delete_blog(self, id: int) -> bool:
         raise NotImplementedError
 
     def search_blog(self, id: int) -> Blog:
@@ -104,15 +104,15 @@ class Controller:
 
     # Post methods
 
-    def create_post(self, code:int, title: str, text: str) -> Post:
+    def create_post(self, title: str, text: str) -> Post:
         raise NotImplementedError
 
 
-    def update_post(self):
+    def update_post(self, code:int, title: str, text: str):
         raise NotImplementedError
 
 
-    def delete_post(self):
+    def delete_post(self, code: int):
         raise NotImplementedError
 
 
@@ -120,5 +120,5 @@ class Controller:
         raise NotImplementedError
 
 
-    def retrieve_posts(self):
+    def retrieve_posts(self, blog: Blog):
         raise NotImplementedError

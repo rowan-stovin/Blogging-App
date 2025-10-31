@@ -6,6 +6,9 @@ class Blog:
         self.email = email
 
     def __eq__(self, other) -> bool:
+        # This might not be right...
+        if not other: return False
+
         return self.id == other.id \
             and self.name == other.name \
             and self.url == other.url \
