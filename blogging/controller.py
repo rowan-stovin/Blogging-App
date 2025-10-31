@@ -37,7 +37,7 @@ class Controller:
     def create_blog(self, id: int, name: str, url: str, email: str) -> Blog:
         # If user isn't logged in, or blog already exists
         if not self.logged_in or self.blog_collection[id]:
-            return None
+            return
 
         self.blog_collection[id] = Blog(id, name, url, email)
         return self.blog_collection[id]
@@ -47,19 +47,19 @@ class Controller:
 
     def update_blog(self, old_id: int, new_id: int, name: str, url: str, email: str):
         if old_id == new_id:
-            return self.blog_collection[old_id]
+            return self.blog_collection.get(old_id)
 
         self.blog_collection[new_id] = self.create_blog(new_id, name, url, email)
         self.blog_collection[old_id] = None
 
         return self.blog_collection.get(new_id)
 
-    def retrieve_blogs(self, name):
+    def retrieve_blogs(self, keyword) -> list[Blog]:
         blogs = []
-        if(not self.logged_in):
+        if not self.logged_in:
             return
         for each in self.blog_collection:
-            if name in each.self.name:
+            if name is each.self.name:
                 blogs.append(each)
 
         return blogs
