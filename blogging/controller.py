@@ -47,9 +47,11 @@ class Controller:
         #should something be returned?
         self.current_blog = self.search_blog(cur_id)
 
+    #unsets current blog
     def unset_current_blog(self):
         self.current_blog = None
-        
+
+    #gets current blog
     def get_current_blog(self):
         if(self.logged_in):
             return self.current_blog
@@ -57,7 +59,7 @@ class Controller:
         #maybe return False
         return None
 
-
+    #creates new blog
     def create_blog(self, id: int, name: str, url: str, email: str) -> Blog:
         # If user isn't logged in, or blog already exists
         if not self.logged_in or self.blog_collection.get(id):
@@ -88,7 +90,7 @@ class Controller:
 
         return True
 
-
+    #deletes blog with given id
     def delete_blog(self, id: int) -> bool:
         blog = self.search_blog(id)
 
@@ -102,9 +104,11 @@ class Controller:
         del self.blog_collection[id]
         return True
 
+    #searches blog by id
     def search_blog(self, id: int) -> Blog:
         return self.blog_collection.get(id)
 
+    #retrieves a list of blogs with keyword in its name
     def retrieve_blogs(self, keyword) -> list[Blog]:
         if not self.logged_in:
             return
