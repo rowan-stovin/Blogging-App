@@ -9,18 +9,17 @@ class Controller:
         self.blog_collection = {}
         self.current_blog = None
 
-
+    """Sets their username"""
     def set_username(self, username: str) -> None:
         self.username = username
 
-
+    """Sets their password"""
     def set_password(self, password: int) -> None:
         self.password = password
 
-
+    """logs in the user if not already logged in and username/password is correct"""
     def login(self, username: str, password: str) -> bool:
-        # Can't login if already logged in
-        if self.logged_in:
+        if self.is_logged_in():
             return False
         elif self.username != username or self.password != password:
             return False
@@ -28,9 +27,9 @@ class Controller:
         self.logged_in = True
         return True
 
-
+    """Logs out the user"""
     def logout(self) -> bool:
-        if not self.logged_in:
+        if not self.is_logged_in():
             return False
 
         self.set_password = None
@@ -38,40 +37,51 @@ class Controller:
         self.logged_in = False
 
         return True
-
-
+    
+    """Checks if they are logged in"""
+    def is_logged_in(self):
+        if self.logged_in:
+            return True
+        
+        return False
+    
+    """Checks if theres a current blog"""
+    def valid_current_blog(self):
+        if not self.current_blog:
+            return False
+        
+        return True
+    
     # --- Blog methods ---
 
+    """Set current blog"""
     def set_current_blog(self, cur_id: int):
-
-        #should something be returned?
         self.current_blog = self.search_blog(cur_id)
 
-    #unsets current blog
+    """unsets current blog"""
     def unset_current_blog(self):
         self.current_blog = None
 
-    #gets current blog
+    """gets current blog"""
     def get_current_blog(self):
         if self.logged_in:
             return self.current_blog
 
-        #maybe return False
         return None
 
 
-    #creates new blog
+    """creates new blog"""
     def create_blog(self, id: int, name: str, url: str, email: str) -> Blog:
         # If user isn't logged in, or blog already exists
-        if not self.logged_in or self.blog_collection.get(id):
-            return
+        if not self.is_logged_in() or self.blog_collection.get(id):
+            return None
 
         self.blog_collection[id] = Blog(id, name, url, email)
         return self.blog_collection[id]
 
-
+    """Updates the blog, can change its id"""
     def update_blog(self, old_id: int, new_id: int, name: str, url: str, email: str) -> bool:
-        if not self.logged_in or not self.blog_collection:
+        if not self.is_logged_in() or not self.blog_collection:
             return False
 
         # Cannot update current blog (if there is a current blog)
@@ -87,42 +97,39 @@ class Controller:
 
         # Delete old (if exists) if not same as new (because it hasn't been overridden)
         if self.blog_collection.get(old_id) and old_id != new_id:
-            del self.blog_collection[old_id]
+            self.delete_blog(old_id)
 
         return True
 
-
+    """Deletes blog with the given id."""
     def delete_blog(self, id: int) -> bool:
-        """Deletes blog with given id."""
         blog = self.search_blog(id)
-
-        if not self.logged_in:
+        
+        if not self.is_logged_in():
             return False
-        elif blog == None:
+        elif not blog:
             return False
-        elif blog == self.current_blog:
+        elif blog == self.get_current_blog():
             return False
-
+        
         del self.blog_collection[id]
         return True
 
-
+    """Searches for blog with given id."""
     def search_blog(self, id: int) -> Blog:
-        """Searches for blog with given id."""
         return self.blog_collection.get(id)
 
-
+    """Lists the blogs"""
     def list_blogs(self) -> list[Blog]:
-        if not self.logged_in:
-            return
+        if not self.is_logged_in():
+            return None
 
         return [blog for blog in self.blog_collection.values()]
 
-
+    """Retrieves a list of blogs with keyword in name."""
     def retrieve_blogs(self, keyword) -> list[Blog]:
-        """Retrieves a list of blogs with keyword in name."""
-        if not self.logged_in:
-            return
+        if not self.is_logged_in():
+            return None
         
         # TODO: Refactor to list comprehension.
         blogs = []
@@ -135,69 +142,53 @@ class Controller:
 
     # --- Post methods ---
 
-    # TODO: Make this method name more clear.
-    def valid_post_usage(self) -> bool:
-        return self.logged_in and self.current_blog
-
-    # TODO: Add docstring (for all methods, I suppose).
+    """If logged in and theres a valid current blog then creates post, otherwise returns None"""
     def create_post(self, title: str, text: str) -> Post:
-        if not self.valid_post_usage(): return
-
-        # NOTE: There is probably a cleaner way to do this.
-        # The post number ("code") is the 1-th index for the blog's posts.
-        # When we list_posts, we return this reversed (highest code first, like a feed).
-        # We could probably change this field name in post.py, would be more readable.
-
-        code = len(self.current_blog.post_collection) + 1
-        post = Post(code, title, text)
-        self.current_blog.post_collection[code] = post
-
-        return post
-
-
+        if not self.is_logged_in() or not self.valid_current_blog():
+            return None
+        
+        return self.get_current_blog().create_post(title, text)
+    
+    """If logged in and theres a valid current blog then updates the post, otherwise returns None"""
     def update_post(self, code: int, title: str, text: str):
-        if not self.valid_post_usage():
+        if not self.is_logged_in() or not self.valid_current_blog():
             return False
 
         # No posts to update
-        if not self.current_blog.post_collection.get(code):
+        if not self.get_current_blog().search_post(code):
             return False
 
-        self.current_blog.post_collection[code] = Post(code, title, text)
+        self.get_current_blog().update_post(code, title, text)
         return True
-
-
+    
+    """If logged in and there's a valid current blog then searches for a post, otherwise returns None"""
     def search_post(self, code: int) -> Post:
-        if not self.valid_post_usage():
-            return
+        if not self.is_logged_in():
+            return None
 
-        return self.current_blog.post_collection.get(code)
-
-
+        return self.get_current_blog().search_post(code)
+    
+    """If logged in and there's a valid current blog then deletes blog with given code"""
     def delete_post(self, code: int):
-        """A method to delete a post in the current blog with a given code. Does not shift post code..."""
-        if not self.valid_post_usage():
-            return False
-
-        if not self.current_blog.post_collection.get(code):
+        if not self.is_logged_in() or not self.valid_current_blog():
             return False
 
         # NOTE: We don't need to shift post codes, IDK why.
-        del self.current_blog.post_collection[code]
-        return True
-
-
+        return self.current_blog.delete_post(code)
+        
+    """If logged in Lists the valid current Blogs post, otherwise returns None"""
     def list_posts(self) -> list[Post]:
-        """A method that returns the current blog's post collection (as a list)."""
-        if not self.valid_post_usage(): return
+        if not self.is_logged_in() or not self.valid_current_blog():
+            return None
 
         # A list of the posts, reversed with slicing (like a feed).
-        return list(self.current_blog.post_collection.values())[::-1]
-
-
+        return self.current_blog.list_posts()
+    
+    """If logged in Retrieves the valid current Blog's posts, otherwise returns None"""
     def retrieve_posts(self, keyword: str) -> list[Post]:
-        """A method to return all posts in the current blog that have keyword in the title or text."""
-        if not self.valid_post_usage(): return
+        if not self.is_logged_in() or not self.valid_current_blog():
+            return None
 
         # For value (post) in posts if keword in that post title or text.
-        return [p for p in self.current_blog.post_collection.values() if keyword in p.title or keyword in p.text]
+        return self.current_blog.retrieve_posts(keyword)
+    
