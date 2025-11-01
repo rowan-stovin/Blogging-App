@@ -145,21 +145,23 @@ class Controller:
 
         return post
 
+
     def update_post(self, code: int, title: str, text: str):
         if not self.logged_in or not self.current_blog:
             return False
-        
+
         # No current Blog
-        if self.current_blog == None:
+        if not self.current_blog:
             return False
-        
+
         # No posts to update
-        if self.current_blog.post_collection == {}:
+        if not self.current_blog.post_collection.get(code):
             return False
-        
-        self.current_blog.post_collection[code] = self.create_post(title, text)
+
+        self.current_blog.post_collection[code] = Post(code, title, text)
         return True
-    
+
+
     def search_post(self, code: int) -> Post:
         if not self.logged_in or not self.current_blog:
             return
@@ -171,12 +173,11 @@ class Controller:
         """A method to delete a post in the current blog with a given code. Does not shift post code..."""
         if not self.logged_in or not self.current_blog:
             return False
-        
+
         if not self.current_blog.post_collection.get(code):
             return False
 
-        # NOTE: Do we need to shift post code's if we delete a post?
-        # I don't think we do, because this method passes tests.
+        # NOTE: We don't need to shift post codes, IDK why.
         del self.current_blog.post_collection[code]
         return True
 
@@ -186,7 +187,7 @@ class Controller:
         if not self.logged_in or not self.current_blog:
             return
 
-        # A list of the posts, reversed with string slicing.
+        # A list of the posts, reversed with slicing (like a feed).
         return list(self.current_blog.post_collection.values())[::-1]
 
 
@@ -194,5 +195,6 @@ class Controller:
         """A method to return all posts in the current blog that have keyword in the title or text."""
         if not self.logged_in or not self.current_blog:
             return
-        
+
+        # For value (post) in posts if keword in that post title or text.
         return [p for p in self.current_blog.post_collection.values() if keyword in p.title or keyword in p.text]
