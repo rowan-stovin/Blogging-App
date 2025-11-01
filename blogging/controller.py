@@ -8,7 +8,7 @@ class Controller:
         self.password = "blogging2025"
         self.blog_collection = {}
         self.current_blog = None
-    
+
 
     def set_username(self, username: str) -> None:
         self.username = username
@@ -40,10 +40,10 @@ class Controller:
         return True
 
 
-    # Blog methods
+    # --- Blog methods ---
 
     def set_current_blog(self, cur_id: int):
-        
+
         #should something be returned?
         self.current_blog = self.search_blog(cur_id)
 
@@ -58,6 +58,7 @@ class Controller:
 
         #maybe return False
         return None
+
 
     #creates new blog
     def create_blog(self, id: int, name: str, url: str, email: str) -> Blog:
@@ -90,8 +91,9 @@ class Controller:
 
         return True
 
-    #deletes blog with given id
+
     def delete_blog(self, id: int) -> bool:
+        """Deletes blog with given id."""
         blog = self.search_blog(id)
 
         if not self.logged_in:
@@ -104,21 +106,10 @@ class Controller:
         del self.blog_collection[id]
         return True
 
-    #searches blog by id
+
     def search_blog(self, id: int) -> Blog:
+        """Searches for blog with given id."""
         return self.blog_collection.get(id)
-
-    #retrieves a list of blogs with keyword in its name
-    def retrieve_blogs(self, keyword) -> list[Blog]:
-        if not self.logged_in:
-            return
-
-        blogs = []
-        for blog in self.blog_collection.values():
-            if keyword in blog.name:
-                blogs.append(blog)
-
-        return blogs
 
 
     def list_blogs(self) -> list[Blog]:
@@ -128,15 +119,33 @@ class Controller:
         return [blog for blog in self.blog_collection.values()]
 
 
-    # Post methods
-
-    def create_post(self, title: str, text: str) -> Post:
-        # We could probably make this into a helper method if we wanted to.
-        if not self.logged_in or not self.current_blog:
+    def retrieve_blogs(self, keyword) -> list[Blog]:
+        """Retrieves a list of blogs with keyword in name."""
+        if not self.logged_in:
             return
+        
+        # TODO: Refactor to list comprehension.
+        blogs = []
+        for blog in self.blog_collection.values():
+            if keyword in blog.name:
+                blogs.append(blog)
+
+        return blogs
+
+
+    # --- Post methods ---
+
+    # TODO: Make this method name more clear.
+    def valid_post_usage(self) -> bool:
+        return self.logged_in and self.current_blog
+
+    # TODO: Add docstring (for all methods, I suppose).
+    def create_post(self, title: str, text: str) -> Post:
+        if not self.valid_post_usage(): return
 
         # NOTE: There is probably a cleaner way to do this.
         # The post number ("code") is the 1-th index for the blog's posts.
+        # When we list_posts, we return this reversed (highest code first, like a feed).
         # We could probably change this field name in post.py, would be more readable.
 
         code = len(self.current_blog.post_collection) + 1
@@ -145,24 +154,21 @@ class Controller:
 
         return post
 
+
     def update_post(self, code: int, title: str, text: str):
-        if not self.logged_in or not self.current_blog:
+        if not self.valid_post_usage():
             return False
-        
-        # No current Blog
-        if self.current_blog == None:
-            return False
-        
+
         # No posts to update
-        if self.current_blog.post_collection == {}:
+        if not self.current_blog.post_collection.get(code):
             return False
-        
-        #self.current_blog.post_collection[code] = self.create_post(title, text)
+
         self.current_blog.post_collection[code] = Post(code, title, text)
         return True
-    
+
+
     def search_post(self, code: int) -> Post:
-        if not self.logged_in or not self.current_blog:
+        if not self.valid_post_usage():
             return
 
         return self.current_blog.post_collection.get(code)
@@ -170,30 +176,28 @@ class Controller:
 
     def delete_post(self, code: int):
         """A method to delete a post in the current blog with a given code. Does not shift post code..."""
-        if not self.logged_in or not self.current_blog:
+        if not self.valid_post_usage():
             return False
-        
+
         if not self.current_blog.post_collection.get(code):
             return False
 
-        # NOTE: Do we need to shift post code's if we delete a post?
-        # I don't think we do, because this method passes tests.
+        # NOTE: We don't need to shift post codes, IDK why.
         del self.current_blog.post_collection[code]
         return True
 
 
     def list_posts(self) -> list[Post]:
         """A method that returns the current blog's post collection (as a list)."""
-        if not self.logged_in or not self.current_blog:
-            return
+        if not self.valid_post_usage(): return
 
-        # A list of the posts, reversed with string slicing.
+        # A list of the posts, reversed with slicing (like a feed).
         return list(self.current_blog.post_collection.values())[::-1]
 
 
     def retrieve_posts(self, keyword: str) -> list[Post]:
         """A method to return all posts in the current blog that have keyword in the title or text."""
-        if not self.logged_in or not self.current_blog:
-            return
-        
+        if not self.valid_post_usage(): return
+
+        # For value (post) in posts if keword in that post title or text.
         return [p for p in self.current_blog.post_collection.values() if keyword in p.title or keyword in p.text]

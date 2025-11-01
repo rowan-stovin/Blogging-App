@@ -7,7 +7,7 @@ class Blog:
         self.post_collection = {}
 
     def __eq__(self, other) -> bool:
-        # This might not be right...
+        # I don't like this for some reason but I guess it works.
         if not other: return False
 
         return self.id == other.id \
