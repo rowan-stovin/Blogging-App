@@ -157,7 +157,8 @@ class Controller:
         if self.current_blog.post_collection == {}:
             return False
         
-        self.current_blog.post_collection[code] = self.create_post(title, text)
+        #self.current_blog.post_collection[code] = self.create_post(title, text)
+        self.current_blog.post_collection[code] = Post(code, title, text)
         return True
     
     def search_post(self, code: int) -> Post:
