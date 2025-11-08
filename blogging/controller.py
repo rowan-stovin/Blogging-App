@@ -152,7 +152,7 @@ class Controller:
         if not self.logged_in or not self.current_blog:
             return False
 
-        # NOTE: We don't need to shift post codes, IDK why.
+        # NOTE: Doesn't shift post codes.
         return self.current_blog.delete_post(code)
 
     def list_posts(self) -> list[Post]:

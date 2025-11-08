@@ -9,10 +9,7 @@ class Post:
         self.update = None
 
     def __eq__(self, other):
-        # I don't think we need to compare datatime's
-        # (from what it says in test file).
-        # Also, time's aren't even used in this assignment, pretty sure.
-        # Guess for next assignment!
+        """Compares two posts"""
         return self.code == other.code \
             and self.title == other.title \
             and self.text == other.text

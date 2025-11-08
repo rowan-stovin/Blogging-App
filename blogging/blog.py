@@ -10,7 +10,6 @@ class Blog:
 
     def __eq__(self, other) -> bool:
         """Compares two blogs"""
-        # I don't like this for some reason but I guess it works.
         if not other: return False
 
         return self.id == other.id \
@@ -20,15 +19,12 @@ class Blog:
 
     def __repr__(self) -> str:
         """String representation of a Blog"""
-
         return f"Blog(id: {self.id}, name: {self.name}, url: {self.url}, email: {self.email})"
     
     def create_post(self, title: str, text: str) -> Post:
         """Creates a post"""
-        # NOTE: There is probably a cleaner way to do this.
-        # The post number ("code") is the 1-th index for the blog's posts.
+        # NOTE: The post code is the 1-th index for the blog's posts.
         # When we list_posts, we return this reversed (highest code first, like a feed).
-        # We could probably change this field name in post.py, would be more readable.
 
         code = len(self.post_collection) + 1
         post = Post(code, title, text)
@@ -50,16 +46,18 @@ class Blog:
         if self.post_collection == {}:
             return False
         
-        # NOTE: We don't need to shift post codes, IDK why.
+        # NOTE: doesn't shift post codes.
         del self.post_collection[code]
         return True
 
     def list_posts(self) -> list[Post]:
         """Lists the Blog's post collection"""
+       
         # A list of the posts, reversed with slicing (like a feed).
         return list(self.post_collection.values())[::-1]
 
     def retrieve_posts(self, keyword: str) -> list[Post]:
         """Lists all posts in the Blog that have the given keyword in the title or text."""
+        
         # For value (post) in posts if keword in that post title or text.
         return [p for p in self.post_collection.values() if keyword in p.title or keyword in p.text]
