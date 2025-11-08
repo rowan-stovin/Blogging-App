@@ -129,7 +129,7 @@ class Controller:
         return self.get_current_blog().create_post(title, text)
 
     def update_post(self, code: int, title: str, text: str):
-        # If logged in and theres a valid current blog then updates the post, otherwise returns None
+        """Update a post, if logged in and current blog with posts."""
         if not self.logged_in or not self.current_blog:
             return False
 
@@ -140,30 +140,30 @@ class Controller:
         self.get_current_blog().update_post(code, title, text)
         return True
 
-    """If logged in and there's a valid current blog then searches for a post, otherwise returns None"""
     def search_post(self, code: int) -> Post:
+        """Search for a post in current blog, if logged in."""
         if not self.logged_in:
             return
 
         return self.get_current_blog().search_post(code)
 
-    """If logged in and there's a valid current blog then deletes blog with given code"""
     def delete_post(self, code: int):
+        """Delete a post by code if logged in and there's a valid current blog."""
         if not self.logged_in or not self.current_blog:
             return False
 
         # NOTE: We don't need to shift post codes, IDK why.
         return self.current_blog.delete_post(code)
 
-    """If logged in Lists the valid current Blogs post, otherwise returns None"""
     def list_posts(self) -> list[Post]:
+        """List posts of current blog, if logged in."""
         if not self.logged_in or not self.current_blog:
             return
 
         return self.current_blog.list_posts()
 
-    """If logged in Retrieves the valid current Blog's posts, otherwise returns None"""
     def retrieve_posts(self, keyword: str) -> list[Post]:
+        """Retrieve current blog's posts, if logged in and current blog."""
         if not self.logged_in or not self.current_blog:
             return
 
