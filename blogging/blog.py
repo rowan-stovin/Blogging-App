@@ -20,7 +20,7 @@ class Blog:
 
     def __repr__(self) -> str:
         """String representation of a Blog"""
-        
+
         return f"Blog(id: {self.id}, name: {self.name}, url: {self.url}, email: {self.email})"
     
     def create_post(self, title: str, text: str) -> Post:

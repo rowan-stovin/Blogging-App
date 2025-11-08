@@ -1,1 +1,1 @@
-python3 -m unittest -v ./tests/controller_test.py
+python3 -m unittest -v ./tests/*_test.py
