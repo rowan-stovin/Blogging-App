@@ -4,7 +4,7 @@ class Blog:
     def __init__(self, id: int, name: str, url: str, email: str):
         self.id = id
         self.name = name
-        self. url = url
+        self.url = url
         self.email = email
         self.post_collection = {}
 
@@ -18,6 +18,11 @@ class Blog:
             and self.url == other.url \
             and self.email == other.email
 
+    def __repr__(self) -> str:
+        """String representation of a Blog"""
+        
+        return f"Blog(id: {self.id}, name: {self.name}, url: {self.url}, email: {self.email})"
+    
     def create_post(self, title: str, text: str) -> Post:
         """Creates a post"""
         # NOTE: There is probably a cleaner way to do this.
