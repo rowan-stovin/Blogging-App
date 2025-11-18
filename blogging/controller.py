@@ -1,171 +1,259 @@
 from blogging.blog import Blog
 from blogging.post import Post
 
-class Controller:
-    def __init__(self):
-        self.logged_in = False
-        self.username = "user"
-        self.password = "blogging2025"
-        self.blog_collection = {}
-        self.current_blog = None
+class Controller():
+	''' controller class that receives the system's operations '''
 
-    def set_username(self, username: str) -> None:
-        """Sets their username"""
-        self.username = username
+	def __init__(self):
+		''' construct a controller class '''
+		self.users = {"user" : "blogging2025"}
 
-    def set_password(self, password: int) -> None:
-        """Sets their password"""
-        self.password = password
+		self.username = None
+		self.password = None
+		self.logged = False
 
-    def login(self, username: str, password: str) -> bool:
-        """Logs in the user if not already logged in and username/password is correct"""
-        if self.logged_in:
-            return False
-        elif self.username != username or self.password != password:
-            return False
+		self.blogs = {}
+		self.current_blog = None
 
-        self.logged_in = True
-        return True
+	def login(self, username, password):
+		''' user logs in the system '''
+		if self.logged:
+			return False
+		if username in self.users:
+			if password == self.users[username]:
+				self.username = username
+				self.password = password
+				self.logged = True
+				return True
+			else:
+				return False
+		else:
+			return False
 
-    def logout(self) -> bool:
-        """Logs out the user"""
-        if not self.logged_in:
-            return False
+	def logout(self):
+		''' user logs out from the system '''
+		if not self.logged:
+			return False
+		else:
+			self.username = None
+			self.password = None
+			self.logged = False
+			self.current_blog = None
+			return True
 
-        self.set_password = None
-        self.set_username = None
-        self.logged_in = False
+	def search_blog(self, id):
+		''' user searches a blog '''
+		# must be logged in to do operation
+		if not self.logged:
+			return None
 
-        return True
+		return self.blogs.get(id)
+
+	def create_blog(self, id, name, url, email):
+		''' user creates a blog '''
+		# must be logged in to do operation
+		if not self.logged:
+			return None
+
+		# blog already exists, do not create them
+		if self.blogs.get(id):
+			return None
+
+		# finally, create a new blog
+		blog = Blog(id, name, url, email)
+		self.blogs[id] = blog
+		return blog
+
+	def retrieve_blogs(self, name):
+		''' user retrieves the blogs that satisfy a search criterion '''
+		# must be logged in to do operation
+		if not self.logged:
+			return None
+
+		retrieved_blogs = []
+		for blog in self.blogs.values():
+			if name in blog.name:
+				retrieved_blogs.append(blog)
+		return retrieved_blogs
+
+	def update_blog(self, original_id, id, name, url, email):
+		''' user updates a blog '''
+		# must be logged in to do operation
+		if not self.logged:
+			return False
+
+		# first, search the blog by key
+		blog = self.blogs.get(original_id)
+
+		# blog does not exist, cannot update
+		if not blog:
+			return False
+
+		# blog is current blog, cannot update
+		if self.current_blog:
+			if blog == self.current_blog:
+				return False
+
+		# blog exists, update fields
+		blog.name = name
+		blog.url = url
+		blog.email = email
+
+		# treat different keys as a separate case
+		if original_id != id:
+			if self.blogs.get(id):
+				return False
+			self.blogs.pop(original_id)
+			blog.id = id
+			self.blogs[id] = blog
+
+		return True
+			
+	def delete_blog(self, id):
+		''' user deletes a blog '''
+		# must be logged in to do operation
+		if not self.logged:
+			return False
+
+		# first, search the blog by key
+		blog = self.blogs.get(id)
+
+		# blog does not exist, cannot delete
+		if not blog:
+			return False
+
+		# blog is current blog, cannot delete
+		if self.current_blog:
+			if blog == self.current_blog:
+				return False
+
+		# blog exists, delete blog
+		self.blogs.pop(id)
+		return True
+
+	def list_blogs(self):
+		''' user lists all blogs '''
+		# must be logged in to do operation
+		if not self.logged:
+			return None
+
+		blogs_list = []
+		for blog in self.blogs.values():
+			blogs_list.append(blog)
+		return blogs_list
+
+	def set_current_blog(self, id):
+		''' user sets the current blog '''
+
+		# must be logged in to do operation
+		if not self.logged:
+			return False
+
+		# first, search the blog by key
+		blog = self.blogs.get(id)
+
+		# blog does not exist
+		if not blog:
+			return False
+
+		# blog exists, set them to be the current blog
+		self.current_blog = blog
 
 
-    # --- Blog methods ---
+	def get_current_blog(self):
+		''' get the current blog '''
+		# must be logged in to do operation
+		if not self.logged:
+			return None
 
-    def set_current_blog(self, cur_id: int):
-        """Set current blog"""
-        self.current_blog = self.search_blog(cur_id)
+		# return current blog
+		return self.current_blog
 
-    def unset_current_blog(self):
-        """Unsets current blog"""
-        self.current_blog = None
+	def unset_current_blog(self):
+		''' unset the current blog '''
 
-    def get_current_blog(self):
-        """Gets current blog"""
-        if self.logged_in:
-            return self.current_blog
+		# must be logged in to do operation
+		if not self.logged:
+			return None
 
-
-    def create_blog(self, id: int, name: str, url: str, email: str) -> Blog:
-        """Creates new blog"""
-        # If user isn't logged in, or blog already exists
-        if not self.logged_in or self.blog_collection.get(id):
-            return
-
-        self.blog_collection[id] = Blog(id, name, url, email)
-        return self.blog_collection[id]
-
-    def update_blog(self, old_id: int, new_id: int, name: str, url: str, email: str) -> bool:
-        """Updates the blog, can change its id"""
-        if not self.logged_in or not self.blog_collection:
-            return False
-
-        # Cannot update current blog (if there is a current blog)
-        if self.current_blog == self.blog_collection.get(new_id) and self.current_blog:
-            return False
-
-        # We don't want to update to an existing id, unless we are modifying a blog and keeping same id.
-        if self.blog_collection.get(new_id) and old_id != new_id:
-            return False
-
-        # We update values even if id is the same
-        self.blog_collection[new_id] = Blog(new_id, name, url, email)
-
-        # Delete old (if exists) if not same as new (because it hasn't been overridden)
-        if self.blog_collection.get(old_id) and old_id != new_id:
-            self.delete_blog(old_id)
-
-        return True
-
-    def delete_blog(self, id: int) -> bool:
-        """Deletes blog with the given id."""
-        blog = self.search_blog(id)
-
-        if not self.logged_in or not blog:
-            return False
-
-        # Can't delete current blog
-        if blog == self.get_current_blog():
-            return False
-
-        del self.blog_collection[id]
-        return True
-
-    def search_blog(self, id: int) -> Blog:
-        """Searches for blog with given id."""
-        return self.blog_collection.get(id)
-
-    def list_blogs(self) -> list[Blog]:
-        """Returns a list of all blogs"""
-        if not self.logged_in:
-            return
-
-        return [blog for blog in self.blog_collection.values()]
-
-    def retrieve_blogs(self, keyword) -> list[Blog]:
-        """Retrieves a list of blogs with keyword in name."""
-        if not self.logged_in:
-            return
-
-        return [blog for blog in self.blog_collection.values() if keyword in blog.name]
+		# unset current blog
+		self.current_blog = None
 
 
-    # --- Post methods ---
+	def search_post(self, code):
+		''' user searches a post from the current blog '''
+		# must be logged in to do operation
+		if not self.logged:
+			return None
 
-    def create_post(self, title: str, text: str) -> Post:
-        """Create a post, if logged in and current blog."""
-        if not self.logged_in or not self.current_blog:
-            return
+		# there must be a valid current blog
+		if not self.current_blog:
+			return None
 
-        return self.get_current_blog().create_post(title, text)
+		# search a new post with the given code and return it 
+		return self.current_blog.search_post(code)
 
-    def update_post(self, code: int, title: str, text: str):
-        """Update a post, if logged in and current blog with posts."""
-        if not self.logged_in or not self.current_blog:
-            return False
+	def create_post(self, title, text):
+		''' user creates a post in the current blog '''
+		# must be logged in to do operation
+		if not self.logged:
+			return None
 
-        # No posts to update
-        if not self.get_current_blog().search_post(code):
-            return False
+		# there must be a valid current blog
+		if not self.current_blog:
+			return None
 
-        self.get_current_blog().update_post(code, title, text)
-        return True
+		# create a new post and return it
+		return self.current_blog.create_post(title, text)
 
-    def search_post(self, code: int) -> Post:
-        """Search for a post in current blog, if logged in."""
-        if not self.logged_in:
-            return
+	def retrieve_posts(self, search_string):
+		''' user retrieves the posts from the current blog
+			that satisfy a search string '''
+		# must be logged in to do operation
+		if not self.logged:
+			return None
 
-        return self.get_current_blog().search_post(code)
+		# there must be a valid current blog
+		if not self.current_blog:
+			return None
 
-    def delete_post(self, code: int):
-        """Delete a post by code if logged in and there's a valid current blog."""
-        if not self.logged_in or not self.current_blog:
-            return False
+		# return the found posts
+		return self.current_blog.retrieve_posts(search_string)
 
-        # NOTE: Doesn't shift post codes.
-        return self.current_blog.delete_post(code)
+	def update_post(self, code, new_title, new_text):
+		''' user updates a post from the current blog '''
+		# must be logged in to do operation
+		if not self.logged:
+			return None
 
-    def list_posts(self) -> list[Post]:
-        """List posts of current blog, if logged in."""
-        if not self.logged_in or not self.current_blog:
-            return
+		# there must be a valid current blog
+		if not self.current_blog:
+			return None
 
-        return self.current_blog.list_posts()
+		# update post
+		return self.current_blog.update_post(code, new_title, new_text)
 
-    def retrieve_posts(self, keyword: str) -> list[Post]:
-        """Retrieve current blog's posts, if logged in and current blog."""
-        if not self.logged_in or not self.current_blog:
-            return
+	def delete_post(self, code):
+		''' user deletes a post from the current blog '''
+		# must be logged in to do operation
+		if not self.logged:
+			return None
 
-        # For value (post) in posts if keword in that post title or text.
-        return self.current_blog.retrieve_posts(keyword)
+		# there must be a valid current blog
+		if not self.current_blog:
+			return None
+
+		# delete post
+		return self.current_blog.delete_post(code)
+
+	def list_posts(self):
+		''' user lists all posts from the current blog '''
+		# must be logged in to do operation
+		if not self.logged:
+			return None
+
+		# there must be a valid current blog
+		if not self.current_blog:
+			return None
+
+		return self.current_blog.list_posts()

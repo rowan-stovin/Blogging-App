@@ -1,63 +1,96 @@
+import datetime
 from blogging.post import Post
 
-class Blog:
-    def __init__(self, id: int, name: str, url: str, email: str):
-        self.id = id
-        self.name = name
-        self.url = url
-        self.email = email
-        self.post_collection = {}
+class Blog():
+	''' class that represents a blog '''
 
-    def __eq__(self, other) -> bool:
-        """Compares two blogs"""
-        if not other: return False
+	def __init__(self, id, name, url, email):
+		''' construct a blog '''
+		self.counter = 0
+		self.posts = []
 
-        return self.id == other.id \
-            and self.name == other.name \
-            and self.url == other.url \
-            and self.email == other.email
+		self.id = id
+		self.name = name
+		self.url = url
+		self.email = email
 
-    def __repr__(self) -> str:
-        """String representation of a Blog"""
-        return f"Blog(id: {self.id}, name: {self.name}, url: {self.url}, email: {self.email})"
-    
-    def create_post(self, title: str, text: str) -> Post:
-        """Creates a post"""
-        # NOTE: The post code is the 1-th index for the blog's posts.
-        # When we list_posts, we return this reversed (highest code first, like a feed).
+	def __eq__(self, other):
+		''' checks whether this blog is the same as other blog '''
+		return self.id == other.id and self.name == other.name and self.url == other.url and self.email == other.email
 
-        code = len(self.post_collection) + 1
-        post = Post(code, title, text)
-        self.post_collection[code] = post
+	def __str__(self):
+		''' converts the blog object to a string representation '''
+		return str(self.id) + "; " + self.name + "; " + self.url + "; " + self.email
 
-        return post
+	def __repr__(self):
+		''' converts the blog object to a string representation for debugging '''
+		return "Blog(%r, %r, %r, %r)" % (self.id, self.name, self.url, self.email)
 
-    def update_post(self, code: int, title: str, text: str):
-        """Updates the post at the given code"""
-        self.post_collection[code] = Post(code, title, text)
-        return True
+	def search_post(self, code):
+		''' search a post in the blog '''
+		for post in self.posts:
+			if post.code == code:
+				return post
+		return None
 
-    def search_post(self, code: int) -> Post:
-        """Searches for a post in the current Blogs collection"""
-        return self.post_collection.get(code)
+	def create_post(self, title, text):
+		''' create a post in the blog '''
+		self.counter += 1
+		new_post = Post(self.counter, title, text)
+		self.posts.append(new_post)
+		return new_post
 
-    def delete_post(self, code: int):
-        """Deletes a post in the current blog with the given code. Does not shift post code..."""
-        if self.post_collection == {}:
-            return False
-        
-        # NOTE: doesn't shift post codes.
-        del self.post_collection[code]
-        return True
+	def retrieve_posts(self, search_string):
+		''' retrieve posts in the blog that satisfy a search string '''
+		# retrieve existing posts
+		retrieved_posts = []
+		for post in self.posts:
+			if search_string in post.title or search_string in post.text:
+				retrieved_posts.append(post)
+		return retrieved_posts
 
-    def list_posts(self) -> list[Post]:
-        """Lists the Blog's post collection"""
-       
-        # A list of the posts, reversed with slicing (like a feed).
-        return list(self.post_collection.values())[::-1]
+	def update_post(self, code, new_title, new_text):
+		''' update a post from the blog '''
+		updated_post = None
 
-    def retrieve_posts(self, keyword: str) -> list[Post]:
-        """Lists all posts in the Blog that have the given keyword in the title or text."""
-        
-        # For value (post) in posts if keword in that post title or text.
-        return [p for p in self.post_collection.values() if keyword in p.title or keyword in p.text]
+		# first, search the post by code
+		for post in self.posts:
+			if post.code == code:
+				updated_post = post
+				break
+
+		# post does not exist
+		if not updated_post:
+			return False
+
+		# post exists, update fields and update timestamp
+		updated_post.update(new_title, new_text)
+		return True
+
+	def delete_post(self, code):
+		''' delete a post from the blog '''
+		post_to_delete_index = -1
+
+		# first, search the post by code
+		for i in range(len(self.posts)):
+			if self.posts[i].code == code:
+				post_to_delete_index = i
+				break
+
+		# post does not exist
+		if post_to_delete_index == -1:
+			return False
+
+		# post exists, delete post
+		self.posts.pop(post_to_delete_index)
+		return True
+
+	def list_posts(self):
+		''' list all posts from the blog from the 
+			more recently added to the least recently added'''
+
+		# list existing posts
+		posts_list = []
+		for i in range(-1, -len(self.posts)-1, -1):
+			posts_list.append(self.posts[i])
+		return posts_list

@@ -1,21 +1,31 @@
-from datetime import datetime
+import datetime
 
-class Post:
-    def __init__(self, code: int, title: str, text: str):
-        self.code = code
-        self.title = title
-        self.text = text
-        self.creation = datetime.now()
-        self.update = None
+class Post():
+	''' class that represents a post '''
 
-    def __eq__(self, other):
-        """Compares two posts"""
-        return self.code == other.code \
-            and self.title == other.title \
-            and self.text == other.text
+	def __init__(self, code, title, text):
+		''' constructs a post '''
+		self.code = code
+		self.title = title
+		self.text = text
+		now = datetime.datetime.now()
+		self.creation_time = now
+		self.update_time = now
 
-    def __repr__(self) -> str:
-        """String representation of a Blog"""
-        
-        return f"Blog(code: {self.code}, title: {self.title}, url: {self.text}, creation date: {self.creation}, update date: {self.update})"
-    
+	def update(self, title, text):
+		self.title = title
+		self.text = text
+		self.update_time = datetime.datetime.now()	
+
+
+	def __eq__(self, other):
+		''' checks whether this post is the same as other post '''
+		return self.code == other.code and self.title == other.title and self.text == other.text
+
+	def __str__(self):
+		''' converts the post object to a string representation '''
+		return str(self.code) + "; " + str(self.creation_time) + "; " + str(self.update_time) + "\n" + str(self.title) + "\n\n" + self.text
+
+	def __repr__(self):
+		''' converts the post object to a string representation for debugging '''
+		return "Post(%r, %r, %r,\n%r,\n\n%r\n)" % (self.code, self.creation_time, self.update_time, self.title, self.text)
