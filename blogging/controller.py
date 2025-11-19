@@ -1,23 +1,12 @@
 from blogging.blog import Blog
 from blogging.post import Post
-from blogging.dao.blog_dao import BlogDAO
+from blogging.dao.blog_dao_json import BlogDAOJSON
 from blogging.exception.duplicate_login_exception import DuplicateLoginException
 from blogging.exception.illegal_access_exception import IllegalAccessException
 from blogging.exception.illegal_operation_exception import IllegalOperationException
 from blogging.exception.invalid_login_exception import InvalidLoginException
 from blogging.exception.invalid_logout_exception import InvalidLogoutException
 from blogging.exception.no_current_blog_exception import NoCurrentBlogException
-
-
-# NOTE: We could probably (and should probably) have this class in a different file.
-class BlogDAOJSON(BlogDAO):
-	def __init__(self):
-		self.blogs = {}
-
-	# TODO: I think we have to redefine all methods in BlogDAO here.
-	
-
-
 
 # TODO: Make it so all Controller methods that are defined in BlogDAO reference the BlogDAOJSON methods.
 # That is, I think we redefine all Controller methods to call BlogDAOJSON same-name methods
