@@ -1,6 +1,12 @@
 from blogging.blog import Blog
 from blogging.post import Post
+import blogging.exception.duplicate_login_exception
 import blogging.exception.illegal_access_exception
+import blogging.exception.illegal_login_exception
+import blogging.exception.invalid_login_exception
+import blogging.exception.invalid_logout_exception
+import blogging.exception.no_current_blog_exception
+
 
 class Controller():
 	''' controller class that receives the system's operations '''
