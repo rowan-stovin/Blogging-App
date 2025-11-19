@@ -1,5 +1,6 @@
 from blogging.blog import Blog
 from blogging.post import Post
+from blogging.dao.blog_dao import BlogDAO
 from blogging.exception.duplicate_login_exception import DuplicateLoginException
 from blogging.exception.illegal_access_exception import IllegalAccessException
 from blogging.exception.illegal_operation_exception import IllegalOperationException
@@ -8,20 +9,42 @@ from blogging.exception.invalid_logout_exception import InvalidLogoutException
 from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 
 
+# NOTE: We could probably (and should probably) have this class in a different file.
+class BlogDAOJSON(BlogDAO):
+	def __init__(self):
+		self.blogs = {}
+
+	# TODO: I think we have to redefine all methods in BlogDAO here.
+	
+
+
+
+# TODO: Make it so all Controller methods that are defined in BlogDAO reference the BlogDAOJSON methods.
+# That is, I think we redefine all Controller methods to call BlogDAOJSON same-name methods
+# And the BlogDAOJSON methods preform the CRUD operations.
+# This is my interpretation of the first bit of step 2 in the pdf.
+
+# FROM THE PDF:
+"""For blogs, your Controller class should instantiate a BlogDAOJSON class that inherits from the abstract
+BlogDAO class and assign it to a field. The collection of blogs should be a field inside the concrete BlogDAOJSON
+class, and it is that class that should manipulate blogs with CRUD operations. Then, your Controller class should
+delegate its blogs’ CRUD operations to its BlogDAOJSON field object."""
+
 class Controller():
 	''' controller class that receives the system's operations '''
 
 	def __init__(self):
 		''' construct a controller class '''
-		self.users = {"user" : "123456"\
-		, "ali": "@G00dPassw0rd" \
-		, "kala": "e5268ad137eec951a48a5e5da52558c7727aaa537c8b308b5e403e6b434e036e"}
+		self.users = {"user" : "123456",
+				"ali": "@G00dPassw0rd",
+				"kala": "e5268ad137eec951a48a5e5da52558c7727aaa537c8b308b5e403e6b434e036e"}
 
 		self.username = None
 		self.password = None
 		self.logged = False
 
-		self.blogs = {}
+		self.blog_dao_json = BlogDAOJSON()
+		#self.blogs = {} # commented this out as we need to rely on self.blog_dao_json.blogs instead.
 		self.current_blog = None
 
 	def login(self, username, password):
@@ -72,6 +95,7 @@ class Controller():
 		blog = Blog(id, name, url, email)
 		self.blogs[id] = blog
 		return blog
+	
 
 	def retrieve_blogs(self, name):
 		''' user retrieves the blogs that satisfy a search criterion '''
