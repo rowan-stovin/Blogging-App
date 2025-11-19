@@ -33,14 +33,14 @@ class Controller():
 				self.logged = True
 				return True
 			else:
-				return IllegalAccessException
+				raise IllegalAccessException
 		else:
-			return IllegalAccessException
+			raise IllegalAccessException
 
 	def logout(self):
 		''' user logs out from the system '''
 		if not self.logged:
-			return False
+			raise IllegalAccessException
 		else:
 			self.username = None
 			self.password = None
@@ -52,7 +52,7 @@ class Controller():
 		''' user searches a blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			return IllegalAccessException
+			raise IllegalAccessException
 
 		return self.blogs.get(id)
 
@@ -60,7 +60,7 @@ class Controller():
 		''' user creates a blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			return IllegalAccessException
+			raise IllegalAccessException
 
 		# blog already exists, do not create them
 		if self.blogs.get(id):
@@ -75,7 +75,7 @@ class Controller():
 		''' user retrieves the blogs that satisfy a search criterion '''
 		# must be logged in to do operation
 		if not self.logged:
-			return IllegalAccessException
+			raise IllegalAccessException
 
 		retrieved_blogs = []
 		for blog in self.blogs.values():
@@ -87,7 +87,7 @@ class Controller():
 		''' user updates a blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			return False
+			raise IllegalAccessException
 
 		# first, search the blog by key
 		blog = self.blogs.get(original_id)
@@ -120,7 +120,7 @@ class Controller():
 		''' user deletes a blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			return False
+			raise IllegalAccessException
 
 		# first, search the blog by key
 		blog = self.blogs.get(id)
@@ -142,7 +142,7 @@ class Controller():
 		''' user lists all blogs '''
 		# must be logged in to do operation
 		if not self.logged:
-			return None
+			raise IllegalAccessException
 
 		blogs_list = []
 		for blog in self.blogs.values():
@@ -154,7 +154,7 @@ class Controller():
 
 		# must be logged in to do operation
 		if not self.logged:
-			return False
+			raise IllegalAccessException
 
 		# first, search the blog by key
 		blog = self.blogs.get(id)
@@ -171,7 +171,7 @@ class Controller():
 		''' get the current blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			return None
+			raise IllegalAccessException
 
 		# return current blog
 		return self.current_blog
@@ -181,7 +181,7 @@ class Controller():
 
 		# must be logged in to do operation
 		if not self.logged:
-			return None
+			raise IllegalAccessException
 
 		# unset current blog
 		self.current_blog = None
@@ -191,7 +191,7 @@ class Controller():
 		''' user searches a post from the current blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			return None
+			raise IllegalAccessException
 
 		# there must be a valid current blog
 		if not self.current_blog:
@@ -204,7 +204,7 @@ class Controller():
 		''' user creates a post in the current blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			return None
+			raise IllegalAccessException
 
 		# there must be a valid current blog
 		if not self.current_blog:
@@ -218,7 +218,7 @@ class Controller():
 			that satisfy a search string '''
 		# must be logged in to do operation
 		if not self.logged:
-			return None
+			raise IllegalAccessException
 
 		# there must be a valid current blog
 		if not self.current_blog:
@@ -231,7 +231,7 @@ class Controller():
 		''' user updates a post from the current blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			return None
+			raise IllegalAccessException
 
 		# there must be a valid current blog
 		if not self.current_blog:
@@ -244,7 +244,7 @@ class Controller():
 		''' user deletes a post from the current blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			return None
+			raise IllegalAccessException
 
 		# there must be a valid current blog
 		if not self.current_blog:
@@ -257,7 +257,7 @@ class Controller():
 		''' user lists all posts from the current blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			return None
+			raise IllegalAccessException
 
 		# there must be a valid current blog
 		if not self.current_blog:
