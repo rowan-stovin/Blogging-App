@@ -13,8 +13,8 @@ class Controller():
 
 	def __init__(self):
 		''' construct a controller class '''
-		self.users = {"user" : "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"\
-		, "ali": "6394ffec21517605c1b426d43e6fa7eb0cff606ded9c2956821c2c36bfee2810" \
+		self.users = {"user" : "123456"\
+		, "ali": "@G00dPassw0rd" \
 		, "kala": "e5268ad137eec951a48a5e5da52558c7727aaa537c8b308b5e403e6b434e036e"}
 
 		self.username = None
@@ -111,7 +111,7 @@ class Controller():
 		# treat different keys as a separate case
 		if original_id != id:
 			if self.blogs.get(id):
-				return False
+				raise IllegalOperationException
 			self.blogs.pop(original_id)
 			blog.id = id
 			self.blogs[id] = blog
