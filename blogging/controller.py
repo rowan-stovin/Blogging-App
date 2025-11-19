@@ -1,11 +1,11 @@
 from blogging.blog import Blog
 from blogging.post import Post
-import blogging.exception.duplicate_login_exception
-import blogging.exception.illegal_access_exception
-import blogging.exception.illegal_login_exception
-import blogging.exception.invalid_login_exception
-import blogging.exception.invalid_logout_exception
-import blogging.exception.no_current_blog_exception
+from blogging.exception.duplicate_login_exception import DuplicateLoginException
+from blogging.exception.illegal_access_exception import IllegalAccessException
+from blogging.exception.illegal_operation_exception import IllegalOperationException
+from blogging.exception.invalid_login_exception import InvalidLoginException
+from blogging.exception.invalid_logout_exception import InvalidLogoutException
+from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 
 
 class Controller():
