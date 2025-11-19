@@ -1,5 +1,6 @@
 from blogging.blog import Blog
 from blogging.post import Post
+import blogging.exception.illegal_access_exception
 
 class Controller():
 	''' controller class that receives the system's operations '''
@@ -18,7 +19,7 @@ class Controller():
 	def login(self, username, password):
 		''' user logs in the system '''
 		if self.logged:
-			return False
+			raise IllegalAccessException
 		if username in self.users:
 			if password == self.users[username]:
 				self.username = username
@@ -26,9 +27,9 @@ class Controller():
 				self.logged = True
 				return True
 			else:
-				return False
+				return IllegalAccessException
 		else:
-			return False
+			return IllegalAccessException
 
 	def logout(self):
 		''' user logs out from the system '''
@@ -45,7 +46,7 @@ class Controller():
 		''' user searches a blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			return None
+			return IllegalAccessException
 
 		return self.blogs.get(id)
 
@@ -53,7 +54,7 @@ class Controller():
 		''' user creates a blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			return None
+			return IllegalAccessException
 
 		# blog already exists, do not create them
 		if self.blogs.get(id):
@@ -68,7 +69,7 @@ class Controller():
 		''' user retrieves the blogs that satisfy a search criterion '''
 		# must be logged in to do operation
 		if not self.logged:
-			return None
+			return IllegalAccessException
 
 		retrieved_blogs = []
 		for blog in self.blogs.values():
