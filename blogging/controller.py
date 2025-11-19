@@ -13,7 +13,9 @@ class Controller():
 
 	def __init__(self):
 		''' construct a controller class '''
-		self.users = {"user" : "blogging2025"}
+		self.users = {"user" : "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"\
+		, "ali": "6394ffec21517605c1b426d43e6fa7eb0cff606ded9c2956821c2c36bfee2810" \
+		, "kala": "e5268ad137eec951a48a5e5da52558c7727aaa537c8b308b5e403e6b434e036e"}
 
 		self.username = None
 		self.password = None
@@ -25,7 +27,7 @@ class Controller():
 	def login(self, username, password):
 		''' user logs in the system '''
 		if self.logged:
-			raise IllegalAccessException
+			raise DuplicateLoginException
 		if username in self.users:
 			if password == self.users[username]:
 				self.username = username
@@ -33,14 +35,14 @@ class Controller():
 				self.logged = True
 				return True
 			else:
-				raise IllegalAccessException
+				raise InvalidLoginException
 		else:
-			raise IllegalAccessException
+			raise InvalidLoginException
 
 	def logout(self):
 		''' user logs out from the system '''
 		if not self.logged:
-			raise IllegalAccessException
+			raise InvalidLogoutException
 		else:
 			self.username = None
 			self.password = None
@@ -64,7 +66,7 @@ class Controller():
 
 		# blog already exists, do not create them
 		if self.blogs.get(id):
-			return None
+			raise IllegalOperationException
 
 		# finally, create a new blog
 		blog = Blog(id, name, url, email)
@@ -94,12 +96,12 @@ class Controller():
 
 		# blog does not exist, cannot update
 		if not blog:
-			return False
+			raise IllegalOperationException
 
 		# blog is current blog, cannot update
 		if self.current_blog:
 			if blog == self.current_blog:
-				return False
+				raise IllegalOperationException
 
 		# blog exists, update fields
 		blog.name = name
@@ -127,12 +129,12 @@ class Controller():
 
 		# blog does not exist, cannot delete
 		if not blog:
-			return False
+			raise IllegalOperationException
 
 		# blog is current blog, cannot delete
 		if self.current_blog:
 			if blog == self.current_blog:
-				return False
+				raise IllegalOperationException
 
 		# blog exists, delete blog
 		self.blogs.pop(id)
@@ -161,7 +163,7 @@ class Controller():
 
 		# blog does not exist
 		if not blog:
-			return False
+			raise IllegalOperationException
 
 		# blog exists, set them to be the current blog
 		self.current_blog = blog
@@ -195,7 +197,7 @@ class Controller():
 
 		# there must be a valid current blog
 		if not self.current_blog:
-			return None
+			raise NoCurrentBlogException
 
 		# search a new post with the given code and return it 
 		return self.current_blog.search_post(code)
@@ -208,7 +210,7 @@ class Controller():
 
 		# there must be a valid current blog
 		if not self.current_blog:
-			return None
+			raise NoCurrentBlogException
 
 		# create a new post and return it
 		return self.current_blog.create_post(title, text)
@@ -222,7 +224,7 @@ class Controller():
 
 		# there must be a valid current blog
 		if not self.current_blog:
-			return None
+			raise NoCurrentBlogException
 
 		# return the found posts
 		return self.current_blog.retrieve_posts(search_string)
@@ -235,7 +237,7 @@ class Controller():
 
 		# there must be a valid current blog
 		if not self.current_blog:
-			return None
+			raise NoCurrentBlogException
 
 		# update post
 		return self.current_blog.update_post(code, new_title, new_text)
@@ -248,7 +250,7 @@ class Controller():
 
 		# there must be a valid current blog
 		if not self.current_blog:
-			return None
+			raise NoCurrentBlogException
 
 		# delete post
 		return self.current_blog.delete_post(code)
@@ -261,6 +263,6 @@ class Controller():
 
 		# there must be a valid current blog
 		if not self.current_blog:
-			return None
+			raise NoCurrentBlogException
 
 		return self.current_blog.list_posts()
