@@ -120,10 +120,6 @@ class Controller():
 		if original_id != id:
 			if self.blog_dao_json.search_blog(id):
 				raise IllegalOperationException
-			
-			#self.blogs.pop(original_id)
-			#blog.id = id
-			#self.blogs[id] = blog
 
 		return self.blog_dao_json.update_blog(id, blog)
 			
