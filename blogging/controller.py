@@ -68,7 +68,7 @@ class Controller():
 		if not self.logged:
 			raise IllegalAccessException
 
-		return self.blogs.get(id)
+		return self.blog_dao_json.search_blog(id)
 
 	def create_blog(self, id, name, url, email):
 		''' user creates a blog '''
@@ -77,13 +77,12 @@ class Controller():
 			raise IllegalAccessException
 
 		# blog already exists, do not create them
-		if self.blogs.get(id):
+		if self.blog_dao_json.search_blog(id):
 			raise IllegalOperationException
 
 		# finally, create a new blog
 		blog = Blog(id, name, url, email)
-		self.blogs[id] = blog
-		return blog
+		return self.blog_dao_json.create_blog(blog)
 	
 
 	def retrieve_blogs(self, name):
@@ -92,11 +91,7 @@ class Controller():
 		if not self.logged:
 			raise IllegalAccessException
 
-		retrieved_blogs = []
-		for blog in self.blogs.values():
-			if name in blog.name:
-				retrieved_blogs.append(blog)
-		return retrieved_blogs
+		return self.blog_dao_json.retrieve_blogs(name)
 
 	def update_blog(self, original_id, id, name, url, email):
 		''' user updates a blog '''
@@ -105,7 +100,7 @@ class Controller():
 			raise IllegalAccessException
 
 		# first, search the blog by key
-		blog = self.blogs.get(original_id)
+		blog = self.blog_dao_json.search_blog(original_id)
 
 		# blog does not exist, cannot update
 		if not blog:
@@ -123,13 +118,14 @@ class Controller():
 
 		# treat different keys as a separate case
 		if original_id != id:
-			if self.blogs.get(id):
+			if self.blog_dao_json.search_blog(id):
 				raise IllegalOperationException
-			self.blogs.pop(original_id)
-			blog.id = id
-			self.blogs[id] = blog
+			
+			#self.blogs.pop(original_id)
+			#blog.id = id
+			#self.blogs[id] = blog
 
-		return True
+		return self.blog_dao_json.update_blog(id, blog)
 			
 	def delete_blog(self, id):
 		''' user deletes a blog '''
@@ -138,7 +134,7 @@ class Controller():
 			raise IllegalAccessException
 
 		# first, search the blog by key
-		blog = self.blogs.get(id)
+		blog = self.blog_dao_json.search_blog(id)
 
 		# blog does not exist, cannot delete
 		if not blog:
@@ -150,8 +146,7 @@ class Controller():
 				raise IllegalOperationException
 
 		# blog exists, delete blog
-		self.blogs.pop(id)
-		return True
+		return self.blog_dao_json.delete_blog(id)
 
 	def list_blogs(self):
 		''' user lists all blogs '''
@@ -159,10 +154,7 @@ class Controller():
 		if not self.logged:
 			raise IllegalAccessException
 
-		blogs_list = []
-		for blog in self.blogs.values():
-			blogs_list.append(blog)
-		return blogs_list
+		return self.blog_dao_json.list_blogs()
 
 	def set_current_blog(self, id):
 		''' user sets the current blog '''
@@ -172,7 +164,7 @@ class Controller():
 			raise IllegalAccessException
 
 		# first, search the blog by key
-		blog = self.blogs.get(id)
+		blog = self.blog_dao_json.search_blog(id)
 
 		# blog does not exist
 		if not blog:
