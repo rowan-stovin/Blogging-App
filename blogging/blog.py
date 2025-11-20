@@ -6,7 +6,6 @@ class Blog():
 
 	def __init__(self, id, name, url, email):
 		''' construct a blog '''
-		self.counter = 0
 		self.id = id
 		self.name = name
 		self.url = url
@@ -14,7 +13,12 @@ class Blog():
 
 		# NOTE: Assignment PDF says to pass self (blog object) to DAO, but I think this might be better. 
 		# Avoids potential circular import. Also, we only need id anyways in DAO (pretty sure, not certain).
-		self.post_dao_pickle = PostDAOPickle(self.id) 
+		self.post_dao_pickle = PostDAOPickle(self.id)
+		
+		if self.post_dao_pickle.posts:
+			self.counter = self.post_dao_pickle.posts[-1].code
+		else:
+			self.counter = 0
 
 	def __eq__(self, other):
 		''' checks whether this blog is the same as other blog '''
