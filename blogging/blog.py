@@ -1,4 +1,3 @@
-import datetime
 from blogging.post import Post
 from blogging.dao.post_dao_pickle import PostDAOPickle
 
@@ -7,13 +6,19 @@ class Blog():
 
 	def __init__(self, id, name, url, email):
 		''' construct a blog '''
-		self.counter = 0
-		# self.posts = [] # replacing with collection inside of PostDAOPickle object
-		self.post_dao_pickle = PostDAOPickle(self)	
 		self.id = id
 		self.name = name
 		self.url = url
 		self.email = email
+
+		# NOTE: Assignment PDF says to pass self (blog object) to DAO, but I think this might be better. 
+		# Avoids potential circular import. Also, we only need id anyways in DAO (pretty sure, not certain).
+		self.post_dao_pickle = PostDAOPickle(self.id)
+		
+		if self.post_dao_pickle.posts:
+			self.counter = self.post_dao_pickle.posts[-1].code
+		else:
+			self.counter = 0
 
 	def __eq__(self, other):
 		''' checks whether this blog is the same as other blog '''
@@ -34,8 +39,8 @@ class Blog():
 	def create_post(self, title, text) -> Post:
 		''' create a post in the blog '''
 		self.counter += 1
-		new_post = Post(self.counter, title, text)
-		return self.post_dao_pickle.create_post(new_post)
+		post = Post(self.counter, title, text)
+		return self.post_dao_pickle.create_post(post)
 
 	def retrieve_posts(self, search_string) -> list[Post]:
 		''' retrieve posts in the blog that satisfy a search string '''
