@@ -1,26 +1,52 @@
 import pickle
 from blogging.dao.post_dao import PostDAO
 from blogging.post import Post
+from blogging.configuration import Configuration
+
+# NOTE: The load and save helper methods check if self.autosave internally. I think this cleans up the code and is safer.
 
 class PostDAOPickle(PostDAO):
-	def __init__(self, blog):
+	def __init__(self, blog_id: int, autosave=Configuration.autosave):
 		self.posts = []
+		self.autosave = autosave # Defaults to True from configuration class.
+		self.blog_id = blog_id
+		
+		# We technically don't use this if not autosave
+		self.filepath = f'./blogging/records/{self.blog_id}.dat'
 
-		# TODO: Add code for loading posts from blog
-		# I think this is 3.3 in the PDF?
+		self.load_posts()
 
-		# This import is in the __init__ method to avoid circular imports. There might be a better solution.
-		from blogging.blog import Blog
-		self.blog = blog # we pass "self" in blog.py, which is the Blog object itself here, as self.blog
+	# NOTE: Using RuntimeError for these two helper methods might not be precisely right.
+	def load_posts(self) -> None:
+		''' a helper method to read from the blog's .dat file to create the self.posts list '''
+		if self.autosave:
+			try:
+				with open(self.filepath, 'rb') as file:
+					self.posts = pickle.load(file)
+			except FileNotFoundError:
+				return None
+			except:
+				raise RuntimeError('load_posts failed!')
+			
+	def save_posts(self) -> None:
+		''' a helper method to write posts to the blog's .dat file '''
+		if self.autosave:
+			try:
+				with open(self.filepath, 'wb') as file:
+					pickle.dump(self.posts, file)
+			except:
+				raise RuntimeError('save_posts failed!')
 
 	def search_post(self, code) -> Post:
+		''' search for a post by code, implicitly returns None if not found '''
 		for post in self.posts:
 			if post.code == code:
 				return post
 
 	def create_post(self, post) -> Post:
-		''' create a post in the blog '''
+		''' create a post in the blog, save if autosave '''
 		self.posts.append(post)
+		self.save_posts()
 		return post
 
 	def retrieve_posts(self, search_string) -> list[Post]:
@@ -28,14 +54,8 @@ class PostDAOPickle(PostDAO):
 		return [p for p in self.posts if search_string in p.title or search_string in p.text]
 
 	def update_post(self, code, new_title, new_text) -> bool:
-		''' update a post from the blog '''
-		updated_post = None
-
-		# first, search the post by code
-		for post in self.posts:
-			if post.code == code:
-				updated_post = post
-				break
+		''' update a post from the blog, save if autosave '''
+		updated_post = self.search_post(code)
 
 		# post does not exist
 		if not updated_post:
@@ -43,13 +63,15 @@ class PostDAOPickle(PostDAO):
 
 		# post exists, update fields and update timestamp
 		updated_post.update(new_title, new_text)
+		self.save_posts()
 		return True
 
 	def delete_post(self, code) -> bool:
-		''' delete a post from the blog '''
+		''' delete a post from the blog, save if autosave'''
 		post_to_delete_index = -1
 
 		# first, search the post by code
+		# NOTE: Could probably use search_post somehow. Enumerate, somehow?
 		for i in range(len(self.posts)):
 			if self.posts[i].code == code:
 				post_to_delete_index = i
@@ -61,15 +83,10 @@ class PostDAOPickle(PostDAO):
 
 		# post exists, delete post
 		self.posts.pop(post_to_delete_index)
-		# NOTE: I think we should reserialize/resave here, but I am not sure.
+		self.save_posts()
 		return True
 
 	def list_posts(self) -> list[Post]:
 		''' list all posts from the blog from the 
 			more recently added to the least recently added'''
-
-		# list existing posts
-		posts_list = []
-		for i in range(-1, -len(self.posts)-1, -1):
-			posts_list.append(self.posts[i])
-		return posts_list
+		return self.posts[::-1]
