@@ -6,13 +6,13 @@ from blogging.configuration import Configuration
 # NOTE: The load and save helper methods check if self.autosave internally. I think this cleans up the code and is safer.
 
 class PostDAOPickle(PostDAO):
-	def __init__(self, blog_id: int, autosave=Configuration.autosave):
+	def __init__(self, blog_id: int):
 		self.posts = []
-		self.autosave = autosave # Defaults to True from configuration class.
 		self.blog_id = blog_id
+		self.autosave = Configuration.autosave 
 		
 		# We technically don't use this if not autosave
-		self.filepath = f'./blogging/records/{self.blog_id}.dat'
+		self.filepath = f'{Configuration.records_path}/{self.blog_id}{Configuration.records_extension}'
 
 		self.load_posts()
 
