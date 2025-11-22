@@ -1,5 +1,7 @@
+import hashlib
 from blogging.blog import Blog
 from blogging.post import Post
+from blogging.configuration import Configuration
 from blogging.dao.blog_dao_json import BlogDAOJSON
 from blogging.exception.duplicate_login_exception import DuplicateLoginException
 from blogging.exception.illegal_access_exception import IllegalAccessException
@@ -8,42 +10,60 @@ from blogging.exception.invalid_login_exception import InvalidLoginException
 from blogging.exception.invalid_logout_exception import InvalidLogoutException
 from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 
-# TODO: Make it so all Controller methods that are defined in BlogDAO reference the BlogDAOJSON methods.
-# That is, I think we redefine all Controller methods to call BlogDAOJSON same-name methods
-# And the BlogDAOJSON methods preform the CRUD operations.
-# This is my interpretation of the first bit of step 2 in the pdf.
-
-# FROM THE PDF:
-"""For blogs, your Controller class should instantiate a BlogDAOJSON class that inherits from the abstract
-BlogDAO class and assign it to a field. The collection of blogs should be a field inside the concrete BlogDAOJSON
-class, and it is that class that should manipulate blogs with CRUD operations. Then, your Controller class should
-delegate its blogs’ CRUD operations to its BlogDAOJSON field object."""
 
 class Controller():
 	''' controller class that receives the system's operations '''
 
 	def __init__(self):
 		''' construct a controller class '''
-		self.users = {"user" : "123456",
-				"ali": "@G00dPassw0rd",
-				"kala": "e5268ad137eec951a48a5e5da52558c7727aaa537c8b308b5e403e6b434e036e"}
-
+		self.autosave = Configuration.autosave
+		self.users = {}
 		self.username = None
 		self.password = None
 		self.logged = False
-
+		
 		self.blog_dao_json = BlogDAOJSON()
-		#self.blogs = {} # commented this out as we need to rely on self.blog_dao_json.blogs instead.
 		self.current_blog = None
+
+		# NOTE: We omit a conditional check of if self.autosave here,
+		# and we always load from users.txt
+		# In the class disscussion forum, a student asked about this,
+		# and Professor Bittencourt said that this is fine,
+		# as the assignment specfiication was "a bit dubious".
+		# See the post with title: "Persistence vs unittest" in the A4 thread.
+
+		try:
+			with open(Configuration.users_file, "r") as file:
+				for line in file:
+					line = line.strip()
+
+					if not line: 
+						continue
+
+					parts = line.split(",")
+					username, password = parts
+					self.users[username] = password
+
+		except FileNotFoundError:
+			raise FileNotFoundError("users.txt was not found!")
+		except Exception as e:
+			raise RuntimeError(f"Error loading users: {e}")
+	
+
+	def get_password_hash(self, password):
+		encoded_password = password.encode('utf-8')     # Convert the password to bytes
+		hash_object = hashlib.sha256(encoded_password)      # Choose a hashing algorithm (e.g., SHA-256)
+		hex_dig = hash_object.hexdigest()       # Get the hexadecimal digest of the hashed password
+		return hex_dig
 
 	def login(self, username, password):
 		''' user logs in the system '''
 		if self.logged:
 			raise DuplicateLoginException
 		if username in self.users:
-			if password == self.users[username]:
+			if self.get_password_hash(password) == self.users[username]:
 				self.username = username
-				self.password = password
+				self.password = self.get_password_hash(password)
 				self.logged = True
 				return True
 			else:
@@ -55,12 +75,12 @@ class Controller():
 		''' user logs out from the system '''
 		if not self.logged:
 			raise InvalidLogoutException
-		else:
-			self.username = None
-			self.password = None
-			self.logged = False
-			self.current_blog = None
-			return True
+		
+		self.username = None
+		self.password = None
+		self.logged = False
+		self.current_blog = None
+		return True
 
 	def search_blog(self, id):
 		''' user searches a blog '''
@@ -83,7 +103,6 @@ class Controller():
 		# finally, create a new blog
 		blog = Blog(id, name, url, email)
 		return self.blog_dao_json.create_blog(blog)
-	
 
 	def retrieve_blogs(self, name):
 		''' user retrieves the blogs that satisfy a search criterion '''
