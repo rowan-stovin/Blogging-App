@@ -3,10 +3,14 @@ from unittest import main
 from blogging.blog import Blog
 from blogging.post import Post
 import datetime
+from blogging.configuration import Configuration
 
 class BlogTest(TestCase):
 	
 	def setUp(self):
+		# set autosave to False to ignore testing persistence
+		self.configuration = Configuration()
+		self.configuration.__class__.autosave = False
 		self.blog = Blog(1111112000, "Long Journey", "long_journey", "long.journey@gmail.com")
 
 	def test_eq(self):
