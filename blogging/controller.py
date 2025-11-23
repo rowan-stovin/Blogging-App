@@ -51,15 +51,16 @@ class Controller():
 	
 
 	def get_password_hash(self, password):
-		encoded_password = password.encode('utf-8')     # Convert the password to bytes
+		''' a helper method to get the SHA-256 hash for a password (code from lab)'''
+		encoded_password = password.encode('utf-8')     	# Convert the password to bytes
 		hash_object = hashlib.sha256(encoded_password)      # Choose a hashing algorithm (e.g., SHA-256)
-		hex_dig = hash_object.hexdigest()       # Get the hexadecimal digest of the hashed password
+		hex_dig = hash_object.hexdigest()       			# Get the hexadecimal digest of the hashed password
 		return hex_dig
 
 	def login(self, username, password):
 		''' user logs in the system '''
 		if self.logged:
-			raise DuplicateLoginException
+			raise DuplicateLoginException("user is already logged in!")
 		if username in self.users:
 			if self.get_password_hash(password) == self.users[username]:
 				self.username = username
@@ -74,7 +75,7 @@ class Controller():
 	def logout(self):
 		''' user logs out from the system '''
 		if not self.logged:
-			raise InvalidLogoutException
+			raise InvalidLogoutException("user is not logged in!")
 		
 		self.username = None
 		self.password = None
@@ -86,7 +87,7 @@ class Controller():
 		''' user searches a blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			raise IllegalAccessException
+			raise IllegalAccessException("user is not logged in!")
 
 		return self.blog_dao_json.search_blog(id)
 
@@ -94,11 +95,11 @@ class Controller():
 		''' user creates a blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			raise IllegalAccessException
+			raise IllegalAccessException("user is not logged in!")
 
 		# blog already exists, do not create them
 		if self.blog_dao_json.search_blog(id):
-			raise IllegalOperationException
+			raise IllegalOperationException("blog already exists!")
 
 		# finally, create a new blog
 		blog = Blog(id, name, url, email)
@@ -108,7 +109,7 @@ class Controller():
 		''' user retrieves the blogs that satisfy a search criterion '''
 		# must be logged in to do operation
 		if not self.logged:
-			raise IllegalAccessException
+			raise IllegalAccessException("user is not logged in!")
 
 		return self.blog_dao_json.retrieve_blogs(name)
 
@@ -116,19 +117,19 @@ class Controller():
 		''' user updates a blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			raise IllegalAccessException
+			raise IllegalAccessException("user is not logged in!")
 
 		# first, search the blog by key
 		blog = self.blog_dao_json.search_blog(original_id)
 
 		# blog does not exist, cannot update
 		if not blog:
-			raise IllegalOperationException
+			raise IllegalOperationException("blog does not exist!")
 
 		# blog is current blog, cannot update
 		if self.current_blog:
 			if blog == self.current_blog:
-				raise IllegalOperationException
+				raise IllegalOperationException("blog is current blog, cannot update!")
 
 		# blog exists, update fields
 		blog.name = name
@@ -146,19 +147,19 @@ class Controller():
 		''' user deletes a blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			raise IllegalAccessException
+			raise IllegalAccessException("user is not logged in!")
 
 		# first, search the blog by key
 		blog = self.blog_dao_json.search_blog(id)
 
 		# blog does not exist, cannot delete
 		if not blog:
-			raise IllegalOperationException
+			raise IllegalOperationException("blog does not exist, cannot delete!")
 
 		# blog is current blog, cannot delete
 		if self.current_blog:
 			if blog == self.current_blog:
-				raise IllegalOperationException
+				raise IllegalOperationException("blog is current blog, cannot delete!")
 
 		# blog exists, delete blog
 		return self.blog_dao_json.delete_blog(id)
@@ -167,7 +168,7 @@ class Controller():
 		''' user lists all blogs '''
 		# must be logged in to do operation
 		if not self.logged:
-			raise IllegalAccessException
+			raise IllegalAccessException("user is not logged in!")
 
 		return self.blog_dao_json.list_blogs()
 
@@ -176,14 +177,14 @@ class Controller():
 
 		# must be logged in to do operation
 		if not self.logged:
-			raise IllegalAccessException
+			raise IllegalAccessException("user is not logged in!")
 
 		# first, search the blog by key
 		blog = self.blog_dao_json.search_blog(id)
 
 		# blog does not exist
 		if not blog:
-			raise IllegalOperationException
+			raise IllegalOperationException("blog does not exist!")
 
 		# blog exists, set them to be the current blog
 		self.current_blog = blog
@@ -193,7 +194,7 @@ class Controller():
 		''' get the current blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			raise IllegalAccessException
+			raise IllegalAccessException("user is not logged in!")
 
 		# return current blog
 		return self.current_blog
@@ -203,21 +204,20 @@ class Controller():
 
 		# must be logged in to do operation
 		if not self.logged:
-			raise IllegalAccessException
+			raise IllegalAccessException("user is not logged in")
 
 		# unset current blog
 		self.current_blog = None
-
 
 	def search_post(self, code):
 		''' user searches a post from the current blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			raise IllegalAccessException
+			raise IllegalAccessException("user is not logged in!")
 
 		# there must be a valid current blog
 		if not self.current_blog:
-			raise NoCurrentBlogException
+			raise NoCurrentBlogException("no current blog!")
 
 		# search a new post with the given code and return it 
 		return self.current_blog.search_post(code)
@@ -226,11 +226,11 @@ class Controller():
 		''' user creates a post in the current blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			raise IllegalAccessException
+			raise IllegalAccessException("user is not logged in!")
 
 		# there must be a valid current blog
 		if not self.current_blog:
-			raise NoCurrentBlogException
+			raise NoCurrentBlogException("no current blog!")
 
 		# create a new post and return it
 		return self.current_blog.create_post(title, text)
@@ -240,11 +240,11 @@ class Controller():
 			that satisfy a search string '''
 		# must be logged in to do operation
 		if not self.logged:
-			raise IllegalAccessException
+			raise IllegalAccessException("user is not logged in!")
 
 		# there must be a valid current blog
 		if not self.current_blog:
-			raise NoCurrentBlogException
+			raise NoCurrentBlogException("no current blog!")
 
 		# return the found posts
 		return self.current_blog.retrieve_posts(search_string)
@@ -253,7 +253,7 @@ class Controller():
 		''' user updates a post from the current blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			raise IllegalAccessException
+			raise IllegalAccessException("user is not logged in!")
 
 		# there must be a valid current blog
 		if not self.current_blog:
@@ -266,11 +266,11 @@ class Controller():
 		''' user deletes a post from the current blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			raise IllegalAccessException
+			raise IllegalAccessException("user is not logged in!")
 
 		# there must be a valid current blog
 		if not self.current_blog:
-			raise NoCurrentBlogException
+			raise NoCurrentBlogException("no current blog!")
 
 		# delete post
 		return self.current_blog.delete_post(code)
@@ -279,10 +279,10 @@ class Controller():
 		''' user lists all posts from the current blog '''
 		# must be logged in to do operation
 		if not self.logged:
-			raise IllegalAccessException
+			raise IllegalAccessException("user is not logged in!")
 
 		# there must be a valid current blog
 		if not self.current_blog:
-			raise NoCurrentBlogException
+			raise NoCurrentBlogException("no current blog!")
 
 		return self.current_blog.list_posts()

@@ -12,7 +12,7 @@ class Blog():
 		self.email = email
 
 		# NOTE: Assignment PDF says to pass self (blog object) to DAO, but I think this might be better. 
-		# Avoids potential circular import. Also, we only need id anyways in DAO (pretty sure, not certain).
+		# Avoids potential circular import. Also, we only need id anyways in DAO.
 		self.post_dao_pickle = PostDAOPickle(self.id)
 		
 		if self.post_dao_pickle.posts:

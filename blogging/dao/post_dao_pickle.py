@@ -4,7 +4,6 @@ from blogging.post import Post
 from blogging.configuration import Configuration
 
 # NOTE: The load and save helper methods check if self.autosave internally. I think this cleans up the code and is safer.
-
 class PostDAOPickle(PostDAO):
 	def __init__(self, blog_id: int):
 		self.posts = []
@@ -16,7 +15,6 @@ class PostDAOPickle(PostDAO):
 
 		self.load_posts()
 
-	# NOTE: Using RuntimeError for these two helper methods might not be precisely right.
 	def load_posts(self) -> None:
 		''' a helper method to read from the blog's .dat file to create the self.posts list '''
 		if self.autosave:
@@ -24,6 +22,7 @@ class PostDAOPickle(PostDAO):
 				with open(self.filepath, 'rb') as file:
 					self.posts = pickle.load(file)
 			except FileNotFoundError:
+				# File not found, already self.posts = []
 				return None
 			except:
 				raise RuntimeError('load_posts failed!')
@@ -42,7 +41,7 @@ class PostDAOPickle(PostDAO):
 		for post in self.posts:
 			if post.code == code:
 				return post
-
+			
 	def create_post(self, post) -> Post:
 		''' create a post in the blog, save if autosave '''
 		self.posts.append(post)
@@ -51,6 +50,7 @@ class PostDAOPickle(PostDAO):
 
 	def retrieve_posts(self, search_string) -> list[Post]:
 		''' retrieve posts in the blog that satisfy a search string '''
+		# Check all posts in collection: if the string is in the post title or text, add it to the list
 		return [p for p in self.posts if search_string in p.title or search_string in p.text]
 
 	def update_post(self, code, new_title, new_text) -> bool:
@@ -71,7 +71,7 @@ class PostDAOPickle(PostDAO):
 		post_to_delete_index = -1
 
 		# first, search the post by code
-		# NOTE: Could probably use search_post somehow. Enumerate, somehow?
+		# NOTE: Could probably use search_post somehow. Enumerate?
 		for i in range(len(self.posts)):
 			if self.posts[i].code == code:
 				post_to_delete_index = i
