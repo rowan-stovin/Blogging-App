@@ -5,7 +5,6 @@ from blogging.dao.blog_encoder import BlogEncoder
 from blogging.dao.blog_decoder import BlogDecoder
 from blogging.configuration import Configuration
 
-
 class BlogDAOJSON(BlogDAO):
 	def __init__(self):
 		''' Constructs a BlogDAOJSON class.'''
