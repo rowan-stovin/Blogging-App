@@ -3,7 +3,6 @@ from blogging.dao.post_dao import PostDAO
 from blogging.post import Post
 from blogging.configuration import Configuration
 
-# NOTE: The load and save helper methods check if self.autosave internally. I think this cleans up the code and is safer.
 class PostDAOPickle(PostDAO):
 	def __init__(self, blog_id: int):
 		self.posts = []
@@ -71,7 +70,6 @@ class PostDAOPickle(PostDAO):
 		post_to_delete_index = -1
 
 		# first, search the post by code
-		# NOTE: Could probably use search_post somehow. Enumerate?
 		for i in range(len(self.posts)):
 			if self.posts[i].code == code:
 				post_to_delete_index = i
