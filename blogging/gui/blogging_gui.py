@@ -21,7 +21,6 @@ class BloggingGUI(QMainWindow):
         self.setMinimumSize(600, 400)
 
         main_layout = QVBoxLayout()
-        
         login_layout = QGridLayout()
 
         self.username_label = QLabel("username")
@@ -34,23 +33,16 @@ class BloggingGUI(QMainWindow):
         login_layout.addWidget(self.password_label)
         login_layout.addWidget(self.password_text)
         
-        #self.text = QLabel("please log in")
-        #self.text.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        #main_layout.addWidget(self.text)
-        
         main_layout.addStretch()
-        
         button_layout = QHBoxLayout()
         
         self.button_log_in = QPushButton("Log in")
         self.button_log_in.setFixedSize(300, 200)
-        
         self.button_Quit = QPushButton("Quit")
         self.button_Quit.setFixedSize(300, 200)
         
         button_layout.addWidget(self.button_log_in)
         button_layout.addWidget(self.button_Quit)
-
         main_layout.addLayout(login_layout)
         main_layout.addLayout(button_layout)
 
