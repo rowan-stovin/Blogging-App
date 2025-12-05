@@ -66,10 +66,21 @@ class CreateBlogGUI(QMainWindow):
             id = int(self.blog_id_text.text())
         except:
             QMessageBox.warning(self, "Error", "Not a valid id")
+            return
+        if self.controller.blog_dao_json.search_blog(id) is not None:
+            QMessageBox.warning(self, "Error", "There is already an existing blog with that id")
+            return
+        
         name = self.blog_name_text.text()
         url = self.blog_url_text.text()
         email = self.blog_email_text.text()
 
         blog = Blog(id, name, url, email)
         self.controller.blog_dao_json.create_blog(blog)
-        self.exit()
+        self.clear()
+
+    def clear(self):
+        self.blog_email_text.setText("")
+        self.blog_id_text.setText("")
+        self.blog_name_text.setText("")
+        self.blog_url_text.setText("")

@@ -15,8 +15,6 @@ class ListBlogsGUI(QMainWindow):
         
         # Table view
         self.table_view = QTableView()
-        self.layout = QVBoxLayout()
-        self.layout
         
         # Model
         self.model = QStandardItemModel()
@@ -29,11 +27,19 @@ class ListBlogsGUI(QMainWindow):
         self.table_view.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
         self.table_view.setSelectionMode(QTableView.SelectionMode.SingleSelection)
         
+        #exit button
+        exit_button = QPushButton("Exit")
+        exit_button.clicked.connect(self.exit)
+
         # Central widget and layout
         widget = QWidget()
         self.setCentralWidget(widget)
         self.layout = QVBoxLayout(widget)
         self.layout.addWidget(self.table_view)
+        self.layout.addWidget(exit_button)
+
+    def exit(self):
+        self.close()
         
     def populate_table(self):
         blogs = self.controller.blog_dao_json.list_blogs()
