@@ -6,6 +6,13 @@ from PyQt6.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout
 from PyQt6.QtCore import Qt
 
 from blogging.controller import Controller, IllegalOperationException
+from blogging.gui.create_blog_gui import CreateBlogGUI
+from blogging.gui.delete_blog_gui import DeleteBlogGUI
+from blogging.gui.edit_blog_gui import EditBlogGUI
+from blogging.gui.list_blogs_gui import ListBlogsGUI
+from blogging.gui.retrieve_blogs_gui import RetrieveBlogsGUI
+from blogging.gui.search_blog_gui import SearchBlogGUI
+from blogging.gui.update_blog_gui import UpdateBlogGUI
 
 class MainMenuGUI(QMainWindow):
     def __init__(self, controller):
@@ -13,6 +20,8 @@ class MainMenuGUI(QMainWindow):
         self.controller = controller
         self.setWindowTitle("Main Menu")
         self.setMinimumSize(600, 400)
+        
+        self.create_blog_gui = CreateBlogGUI(controller)
 
         main_menu_layout = QGridLayout()
 
@@ -56,8 +65,7 @@ class MainMenuGUI(QMainWindow):
         self.log_out_button.clicked.connect(self.log_out)
 
     def create_blog(self):
-        return
-        #self.controller.create_blog()
+        self.create_blog_gui.show()
 
     def search_blog(self):
         return
