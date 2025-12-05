@@ -21,7 +21,12 @@ class MainMenuGUI(QMainWindow):
         self.setWindowTitle("Main Menu")
         self.setMinimumSize(600, 400)
         
-        self.create_blog_gui = CreateBlogGUI(controller)
+        self.create_blog_gui = CreateBlogGUI(self.controller)
+        self.edit_blog_gui = EditBlogGUI(self.controller)
+        self.delete_blog_gui = DeleteBlogGUI(self.controller)
+        self.retrieve_blogs_gui = RetrieveBlogsGUI(self.controller)
+        self.search_blog_gui = SearchBlogGUI(self.controller)
+        self.update_blog_gui = UpdateBlogGUI(self.controller)
 
         main_menu_layout = QGridLayout()
 
@@ -68,29 +73,21 @@ class MainMenuGUI(QMainWindow):
         self.create_blog_gui.show()
 
     def search_blog(self):
-        return
-        #self.controller.search_blog()
+        self.search_blog_gui.show()
 
     def retrieve_blogs(self):
-        return
-        #self.controller.retrieve_blogs()
+        self.retrieve_blogs_gui.show()
 
     def update_blog(self):
-        return
-        #self.controller.update_blog()
+        self.update_blog_gui.show()
 
     def delete_blog(self):
-        return
-        #self.controller.delete_blog()
+        self.delete_blog_gui.show()
 
     def list_blogs(self):
-        return
-        #self.controller.list_blogs()
-
+        self.update_blog_gui.show()
     def edit_blog(self):
-        return
-        #self.controller.edit_blog()
+        self.edit_blog_gui.show()
 
     def log_out(self):
-        return
-        #self.controller.unset_current_blog()
+        self.close()

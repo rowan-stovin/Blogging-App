@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout
 from blogging.controller import Controller
 from blogging.gui.main_menu_gui import MainMenuGUI
 from blogging.exception.invalid_login_exception import InvalidLoginException
+
 class BloggingGUI(QMainWindow):
 
     def __init__(self):
@@ -23,9 +24,9 @@ class BloggingGUI(QMainWindow):
         main_layout = QVBoxLayout()
         login_layout = QGridLayout()
 
-        self.username_label = QLabel("username")
+        self.username_label = QLabel("Username")
         self.username_text = QLineEdit()
-        self.password_label = QLabel("password")
+        self.password_label = QLabel("Password")
         self.password_text = QLineEdit()
         
         login_layout.addWidget(self.username_label)
@@ -36,7 +37,7 @@ class BloggingGUI(QMainWindow):
         main_layout.addStretch()
         button_layout = QHBoxLayout()
         
-        self.button_log_in = QPushButton("Log in")
+        self.button_log_in = QPushButton("Log In")
         self.button_log_in.setFixedSize(300, 200)
         self.button_Quit = QPushButton("Quit")
         self.button_Quit.setFixedSize(300, 200)
@@ -51,6 +52,7 @@ class BloggingGUI(QMainWindow):
         self.setCentralWidget(widget)
 
         self.button_log_in.clicked.connect(self.login_menu)
+        self.button_Quit.clicked.connect(self.close)
 
     def login_menu(self):
         try:
@@ -59,8 +61,9 @@ class BloggingGUI(QMainWindow):
             self.controller.login(username, password)
             self.main_menu_gui.show()
         except InvalidLoginException:
-            QMessageBox.warning(self, "Error", "wrong username or password, please try again")
-            
+            QMessageBox.warning(self, "Error", "Wrong username or password, please try again.")
+
+          
 def main():
     app = QApplication(sys.argv)
     window = BloggingGUI()
