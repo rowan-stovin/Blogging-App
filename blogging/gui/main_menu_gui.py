@@ -15,12 +15,15 @@ from blogging.gui.search_blog_gui import SearchBlogGUI
 from blogging.gui.update_blog_gui import UpdateBlogGUI
 
 class MainMenuGUI(QMainWindow):
-    def __init__(self, controller):
+    def __init__(self, controller, login_menu):
         super().__init__()
         self.controller = controller
+        self.login_menu = login_menu # Root BloggingGUI object, i.e. the login menu.
         self.setWindowTitle("Main Menu")
         self.setMinimumSize(600, 400)
         
+
+
         self.create_blog_gui = CreateBlogGUI(controller)
         self.search_blog_gui = SearchBlogGUI(controller)
         self.delete_blog_gui = DeleteBlogGUI(controller)
@@ -92,5 +95,6 @@ class MainMenuGUI(QMainWindow):
         self.edit_blog_gui.show()
 
     def log_out(self):
+        self.login_menu.show()
+        self.controller.logged = False
         self.close()
-        return

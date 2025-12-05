@@ -16,7 +16,7 @@ class BloggingGUI(QMainWindow):
         self.configuration = Configuration()
         self.configuration.__class__.autosave = True
         self.controller = Controller()
-        self.main_menu_gui = MainMenuGUI(self.controller)
+        self.main_menu_gui = MainMenuGUI(self.controller, self)
 
         self.setWindowTitle("BLOGGING SYSTEM")
         self.setMinimumSize(600, 400)
@@ -59,6 +59,7 @@ class BloggingGUI(QMainWindow):
             username = self.username_text.text()
             password = self.password_text.text()
             self.controller.login(username, password)
+            self.hide() # Hide the login menu when user logs in.
             self.main_menu_gui.show()
         except InvalidLoginException:
             QMessageBox.warning(self, "Error", "Wrong username or password, please try again.")
