@@ -1,10 +1,8 @@
 import sys
-
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget
 from PyQt6.QtWidgets import QLabel, QLineEdit, QPushButton, QMessageBox
 from PyQt6.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout
 from PyQt6.QtCore import Qt
-
 from blogging.controller import Controller, IllegalOperationException
 
 class SearchBlogGUI(QMainWindow):
@@ -12,13 +10,26 @@ class SearchBlogGUI(QMainWindow):
         super().__init__()
         self.controller = controller
         self.setWindowTitle("Search for a Blog")
-        self.resize(600, 200)
-
-        search_layout = QHBoxLayout()
+        self.resize(600, 300)
         
+        # Search input layout
+        search_layout = QHBoxLayout()
+        blog_id_label_search = QLabel("Enter the Blog's ID")
+        self.blog_id_text_search = QLineEdit()
+        search_layout.addWidget(blog_id_label_search)
+        search_layout.addWidget(self.blog_id_text_search)
+        
+        # Search/Exit buttons
+        button_layout = QHBoxLayout()
+        search_button = QPushButton("Search")
+        search_button.clicked.connect(self.search)
+        exit_button = QPushButton("Exit")
+        exit_button.clicked.connect(self.exit)
+        button_layout.addWidget(search_button)
+        button_layout.addWidget(exit_button)
+        
+        # Blog info display
         info_layout = QGridLayout()
-
-        #blog_label = QLabel("Blog")
         blog_id_label = QLabel("Blog's ID:")
         self.blog_id_text = QLabel("")
         blog_name_label = QLabel("Blog's name:")
@@ -27,8 +38,7 @@ class SearchBlogGUI(QMainWindow):
         self.blog_url_text = QLabel("")
         blog_email_label = QLabel("Blog's Email:")
         self.blog_email_text = QLabel("")
-
-        #info_layout.addWidget(blog_label)
+        
         info_layout.addWidget(blog_id_label, 0, 0)
         info_layout.addWidget(self.blog_id_text, 0, 1)
         info_layout.addWidget(blog_name_label, 1, 0)
@@ -37,59 +47,48 @@ class SearchBlogGUI(QMainWindow):
         info_layout.addWidget(self.blog_url_text, 2, 1)
         info_layout.addWidget(blog_email_label, 3, 0)
         info_layout.addWidget(self.blog_email_text, 3, 1)
-
-        button_layout = QHBoxLayout()
-
-        search_button = QPushButton("Search")
-        search_button.clicked.connect(self.search)
-        exit_button = QPushButton("Exit")
-        exit_button.clicked.connect(self.exit)
-        button_layout.addWidget(search_button)
-        button_layout.addWidget(exit_button)
         
-        search_layout = QHBoxLayout()
+        # Set Current Blog button (initially hidden)
+        self.set_current_blog_button = QPushButton("Set Current Blog")
+        self.set_current_blog_button.clicked.connect(self.set_current_blog)
+        self.set_current_blog_button.hide()
         
-        blog_id_label_search = QLabel("Enter the Blog's ID")
-        self.blog_id_text_search = QLineEdit()
-        search_layout.addWidget(blog_id_label_search)
-        search_layout.addWidget(self.blog_id_text_search)
-
+        # Main layout
         layout = QVBoxLayout()
-        
-        top_widget = QWidget()
-        top_widget.setLayout(search_layout) 
-        middle_widget = QWidget()
-        middle_widget.setLayout(button_layout)
-        bottom_widget = QWidget()
-        bottom_widget.setLayout(info_layout)
-        
-        layout.addWidget(top_widget)
-        layout.addWidget(middle_widget)
-        layout.addWidget(bottom_widget)
+        layout.addLayout(search_layout)
+        layout.addLayout(button_layout)
+        layout.addLayout(info_layout)
+        layout.addWidget(self.set_current_blog_button) # Add button below info
         
         widget = QWidget()
         widget.setLayout(layout)
         self.setCentralWidget(widget)
-
+    
     def search(self):
         try:
             key = int(self.blog_id_text_search.text())
-        except:
-            QMessageBox.warning(self, "Error", "Not a valid id")
+        except ValueError:
+            QMessageBox.warning(self, "Error", "Not a valid ID.")
             return
         
-        blog = self.controller.blog_dao_json.search_blog(key)
-        if blog is not None:
-            self.fill(blog)
+        self.display_blog = self.controller.blog_dao_json.search_blog(key)
+        if self.display_blog:
+            self.fill()
+            self.set_current_blog_button.show() # Show button when blog found
         else:
-            QMessageBox.warning(self, "Error", "No blogs exist with the given id")
+            QMessageBox.warning(self, "Error", "No blogs exist with the given ID.")
+            self.set_current_blog_button.hide() # Hide if no blog found
             return
-
+    
     def exit(self):
         self.close()
-
-    def fill(self, blog):
-        self.blog_id_text.setText(str(blog.id))
-        self.blog_email_text.setText(blog.email)
-        self.blog_name_text.setText(blog.name)
-        self.blog_url_text.setText(blog.url)
+    
+    def fill(self):
+        self.blog_id_text.setText(str(self.display_blog.id))
+        self.blog_email_text.setText(self.display_blog.email)
+        self.blog_name_text.setText(self.display_blog.name)
+        self.blog_url_text.setText(self.display_blog.url)
+    
+    def set_current_blog(self):
+        self.controller.current_blog = self.display_blog
+        QMessageBox.information(self, "Success", f"Current blog set to: {self.display_blog.name}")
