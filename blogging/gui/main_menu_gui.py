@@ -92,4 +92,5 @@ class MainMenuGUI(QMainWindow):
         self.edit_blog_gui.show()
 
     def log_out(self):
+        self.close()
         return
