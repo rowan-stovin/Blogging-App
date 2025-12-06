@@ -40,13 +40,17 @@ class DeleteBlogGUI(QMainWindow):
 
         search_button = QPushButton("Search")
         search_button.clicked.connect(self.search)
-        exit_button = QPushButton("Exit")
-        exit_button.clicked.connect(self.exit)
+        search_button.setMinimumSize(100, 50)
         delete_button = QPushButton("Delete")
         delete_button.clicked.connect(self.delete)
+        delete_button.setMinimumSize(100, 50)
+        exit_button = QPushButton("Exit")
+        exit_button.clicked.connect(self.exit)
+        exit_button.setMinimumSize(100, 50)
+        
         button_layout.addWidget(search_button)
-        button_layout.addWidget(exit_button)
         button_layout.addWidget(delete_button)
+        button_layout.addWidget(exit_button)
         
         #search
         search_layout = QHBoxLayout()

@@ -26,9 +26,12 @@ class SearchBlogGUI(QMainWindow):
         button_layout = QHBoxLayout()
         search_button = QPushButton("Search")
         search_button.clicked.connect(self.search)
+        search_button.setMinimumSize(100, 50)
+        button_layout.addWidget(search_button)
+        
         exit_button = QPushButton("Exit")
         exit_button.clicked.connect(self.exit)
-        button_layout.addWidget(search_button)
+        exit_button.setMinimumSize(100, 50)
         button_layout.addWidget(exit_button)
         
         # Blog info display
@@ -54,11 +57,13 @@ class SearchBlogGUI(QMainWindow):
         # Set Current Blog button (initially disabled)
         self.set_current_blog_button = QPushButton("Set Current Blog")
         self.set_current_blog_button.clicked.connect(self.set_current_blog)
+        self.set_current_blog_button.setMinimumSize(100, 50)
         self.set_current_blog_button.setEnabled(False)
 
         # Blog menu button (initially disabled)
         self.blog_menu_button = QPushButton("Blog Menu")
         self.blog_menu_button.clicked.connect(self.blog_menu)
+        self.blog_menu_button.setMinimumSize(100, 50)
         self.blog_menu_button.setEnabled(False)
 
         bottom_button_layout = QHBoxLayout()

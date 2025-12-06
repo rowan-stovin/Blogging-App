@@ -37,10 +37,10 @@ class CreateBlogGUI(QMainWindow):
         button_layout = QHBoxLayout()
 
         create_button = QPushButton("Create")
-        create_button.setFixedSize(300, 100)
+        create_button.setMinimumSize(100, 50)
         create_button.clicked.connect(self.create)
         exit_button = QPushButton("Exit")
-        exit_button.setFixedSize(300, 100)
+        exit_button.setMinimumSize(100, 50)
         exit_button.clicked.connect(self.exit)
 
         button_layout.addWidget(create_button)

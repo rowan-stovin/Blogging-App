@@ -19,7 +19,7 @@ class MainMenuGUI(QMainWindow):
         self.controller = controller
         self.login_menu = login_menu # Root BloggingGUI object, i.e. the login menu.
         self.setWindowTitle("Main Menu")
-        self.setMinimumSize(600, 400)
+        self.setMinimumSize(900, 400)
 
         self.create_blog_gui = CreateBlogGUI(controller)
         self.search_blog_gui = SearchBlogGUI(controller)
@@ -31,21 +31,19 @@ class MainMenuGUI(QMainWindow):
         main_menu_layout = QGridLayout()
 
         self.create_blog_button = QPushButton("Create a blog")
-        self.create_blog_button.setFixedSize(200, 100)
-        self.search_blog_button = QPushButton(f"Search for a blog by ID\nand set the current blog")
-        self.search_blog_button.setFixedSize(200, 100)
+        self.create_blog_button.setFixedSize(300, 100)
+        self.search_blog_button = QPushButton("Search for a blog by ID and\nmanage the current blog's posts")
+        self.search_blog_button.setFixedSize(300, 100)
         self.retrieve_blogs_button = QPushButton("Retrieve blogs by name")
-        self.retrieve_blogs_button.setFixedSize(200, 100)
+        self.retrieve_blogs_button.setFixedSize(300, 100)
         self.update_blog_button = QPushButton("Change a blog's data")
-        self.update_blog_button.setFixedSize(200, 100)
+        self.update_blog_button.setFixedSize(300, 100)
         self.delete_blog_button = QPushButton("Remove a blog")
-        self.delete_blog_button.setFixedSize(200, 100)
+        self.delete_blog_button.setFixedSize(300, 100)
         self.list_blogs_button = QPushButton("List all blogs")
-        self.list_blogs_button.setFixedSize(200, 100)
-        self.edit_blog_button = QPushButton("Edit blog")
-        self.edit_blog_button.setFixedSize(300, 100)
+        self.list_blogs_button.setFixedSize(300, 100)
         self.log_out_button = QPushButton("Log out")
-        self.log_out_button.setFixedSize(300, 100)
+        self.log_out_button.setFixedSize(900, 100)
         
         main_menu_layout.addWidget(self.create_blog_button, 0, 0)
         main_menu_layout.addWidget(self.search_blog_button, 0, 1)
@@ -55,7 +53,6 @@ class MainMenuGUI(QMainWindow):
         main_menu_layout.addWidget(self.list_blogs_button, 1, 2)
        
         bot_buttons = QHBoxLayout()
-        bot_buttons.addWidget(self.edit_blog_button)
         bot_buttons.addWidget(self.log_out_button)
 
         button_widget = QWidget()

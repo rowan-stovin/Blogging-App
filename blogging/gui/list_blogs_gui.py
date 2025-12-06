@@ -29,13 +29,15 @@ class ListBlogsGUI(QMainWindow):
         
         #buttons
         button_layout = QHBoxLayout()
-
-        exit_button = QPushButton("Exit")
-        exit_button.clicked.connect(self.exit)
-        button_layout.addWidget(exit_button)
         refresh_button = QPushButton("Refresh")
         refresh_button.clicked.connect(self.refresh_table)
+        refresh_button.setMinimumSize(100, 50)
         button_layout.addWidget(refresh_button)
+        exit_button = QPushButton("Exit")
+        exit_button.clicked.connect(self.exit)
+        exit_button.setMinimumSize(100, 50)
+        button_layout.addWidget(exit_button)
+        
         
         # Central widget and layout
         widget = QWidget()

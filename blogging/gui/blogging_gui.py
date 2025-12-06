@@ -19,7 +19,7 @@ class BloggingGUI(QMainWindow):
         self.main_menu_gui = MainMenuGUI(self.controller, self)
 
         self.setWindowTitle("BLOGGING SYSTEM")
-        self.setMinimumSize(600, 400)
+        self.setMinimumSize(600, 200)
 
         main_layout = QVBoxLayout()
         login_layout = QGridLayout()
@@ -38,9 +38,9 @@ class BloggingGUI(QMainWindow):
         button_layout = QHBoxLayout()
         
         self.button_log_in = QPushButton("Log In")
-        self.button_log_in.setFixedSize(300, 200)
+        self.button_log_in.setFixedSize(300, 100)
         self.button_Quit = QPushButton("Quit")
-        self.button_Quit.setFixedSize(300, 200)
+        self.button_Quit.setFixedSize(300, 100)
         
         button_layout.addWidget(self.button_log_in)
         button_layout.addWidget(self.button_Quit)

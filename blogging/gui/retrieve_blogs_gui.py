@@ -27,14 +27,17 @@ class RetrieveBlogsGUI(QMainWindow):
         self.clear_button = QPushButton("Clear")
         self.clear_button.clicked.connect(self.clear_retrieved_blogs)
         self.clear_button.clicked.connect(self.line_edit.clear)
-        
+        self.clear_button.setMinimumSize(100, 50)
+
         # Search button
         self.search_button = QPushButton("Search")
         self.search_button.clicked.connect(self.on_search)
+        self.search_button.setMinimumSize(100, 50)
 
         # Exit button
         self.exit_button = QPushButton("Exit")
         self.exit_button.clicked.connect(self.exit)
+        self.exit_button.setMinimumSize(100, 50)
         
         # Horizontal layout for buttons
         button_layout = QHBoxLayout()

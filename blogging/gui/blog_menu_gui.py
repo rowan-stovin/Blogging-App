@@ -50,12 +50,17 @@ class BlogMenuGUI(QMainWindow):
         self.remove_post_button = QPushButton("Remove a post")
         self.remove_post_button.setFixedSize(600, 50)
 
+        # Exit button
+        self.exit_button = QPushButton("Exit")
+        self.exit_button.setFixedSize(600, 50)
+
         # Add buttons to layout
         main_menu_layout.addWidget(self.create_post_button, 0, 0)
         main_menu_layout.addWidget(self.retrieve_posts_button, 1, 0)
         main_menu_layout.addWidget(self.update_post_button, 2, 0)
         main_menu_layout.addWidget(self.list_posts_button, 3, 0)
         main_menu_layout.addWidget(self.remove_post_button, 4, 0)
+        main_menu_layout.addWidget(self.exit_button, 5, 0)
 
         # Connect buttons to their methods
         self.create_post_button.clicked.connect(self.create_post_gui.show)
@@ -63,3 +68,7 @@ class BlogMenuGUI(QMainWindow):
         self.update_post_button.clicked.connect(self.update_post_gui.show)
         self.list_posts_button.clicked.connect(self.list_posts_gui.show)
         self.remove_post_button.clicked.connect(self.remove_post_gui.show)
+        self.exit_button.clicked.connect(self.exit)
+
+    def exit(self):
+        self.close()
