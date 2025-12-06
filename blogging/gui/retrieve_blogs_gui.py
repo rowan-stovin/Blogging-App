@@ -39,13 +39,6 @@ class RetrieveBlogsGUI(QMainWindow):
         self.exit_button.clicked.connect(self.exit)
         self.exit_button.setMinimumSize(100, 50)
         
-        # Horizontal layout for buttons
-        button_layout = QHBoxLayout()
-        button_layout.addWidget(self.clear_button)
-        button_layout.addWidget(self.search_button)
-        button_layout.addWidget(self.exit_button)
-        self.layout.addLayout(button_layout)
-        
         # Table view
         self.table_view = QTableView()
         self.layout.addWidget(self.table_view)
@@ -54,6 +47,13 @@ class RetrieveBlogsGUI(QMainWindow):
         self.model = QStandardItemModel()
         self.model.setHorizontalHeaderLabels(['ID', 'Name', 'URL', 'Email'])
         self.table_view.setModel(self.model)
+        
+        # Horizontal layout for buttons
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(self.clear_button)
+        button_layout.addWidget(self.search_button)
+        button_layout.addWidget(self.exit_button)
+        self.layout.addLayout(button_layout)
         
         # Configure table appearance
         self.table_view.setAlternatingRowColors(True)

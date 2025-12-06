@@ -61,7 +61,7 @@ class SearchBlogGUI(QMainWindow):
         self.set_current_blog_button.setEnabled(False)
 
         # Blog menu button (initially disabled)
-        self.blog_menu_button = QPushButton("Blog Menu")
+        self.blog_menu_button = QPushButton("Edit Blog")
         self.blog_menu_button.clicked.connect(self.blog_menu)
         self.blog_menu_button.setMinimumSize(100, 50)
         self.blog_menu_button.setEnabled(False)
@@ -76,7 +76,7 @@ class SearchBlogGUI(QMainWindow):
         layout.addLayout(button_layout)
         layout.addLayout(info_layout)  # Only added once now
         layout.addLayout(bottom_button_layout)
-         
+        
         widget = QWidget()
         widget.setLayout(layout)
         self.setCentralWidget(widget)

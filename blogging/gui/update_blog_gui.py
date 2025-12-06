@@ -79,9 +79,9 @@ class UpdateBlogGUI(QMainWindow):
         top_widget = QWidget()
         top_widget.setLayout(search_layout) 
         middle_widget = QWidget()
-        middle_widget.setLayout(button_layout)
+        middle_widget.setLayout(info_layout)
         bottom_widget = QWidget()
-        bottom_widget.setLayout(info_layout)
+        bottom_widget.setLayout(button_layout)
 
         layout.addWidget(top_widget)
         layout.addWidget(middle_widget)
