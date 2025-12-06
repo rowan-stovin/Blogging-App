@@ -11,7 +11,7 @@ class ListBlogsGUI(QMainWindow):
         super().__init__()
         self.controller = controller
         self.setWindowTitle("Lists Blogs")
-        self.resize(600, 200)
+        self.resize(600, 400)
         
         # Table view
         self.table_view = QTableView()
@@ -72,3 +72,9 @@ class ListBlogsGUI(QMainWindow):
             for item in row_items:
                 item.setEditable(False)
             self.model.appendRow(row_items)
+
+    def showEvent(self, event):
+        """Called whenever the window is shown"""
+        super().showEvent(event)
+        # This kind of makes the refresh redundant...
+        self.refresh_table()
