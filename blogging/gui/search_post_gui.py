@@ -4,7 +4,6 @@ from PyQt6.QtWidgets import QLabel, QLineEdit, QPushButton, QMessageBox
 from PyQt6.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout
 from PyQt6.QtCore import Qt
 from blogging.controller import Controller, IllegalOperationException
-from blogging.gui.blog_menu_gui import BlogMenuGUI
 
 class SearchBlogGUI(QMainWindow):
     def __init__(self, controller):
@@ -12,8 +11,6 @@ class SearchBlogGUI(QMainWindow):
         self.controller = controller
         self.setWindowTitle("Search for a Blog")
         self.resize(600, 300)
-
-        self.blog_menu_gui = BlogMenuGUI(controller)
         
         # Search input layout
         search_layout = QHBoxLayout()
@@ -54,25 +51,15 @@ class SearchBlogGUI(QMainWindow):
         # Set Current Blog button (initially hidden)
         self.set_current_blog_button = QPushButton("Set Current Blog")
         self.set_current_blog_button.clicked.connect(self.set_current_blog)
-        self.set_current_blog_button.setEnabled(False)
-
-        # Blog menu button (initially hidden)
-        self.blog_menu_button = QPushButton("Blog Menu")
-        self.blog_menu_button.clicked.connect(self.blog_menu)
-        self.blog_menu_button.setEnabled(False)
-
-        bottom_button_layout = QHBoxLayout()
-        bottom_button_layout.addWidget(self.set_current_blog_button)
-        bottom_button_layout.addWidget(self.blog_menu_button)
+        self.set_current_blog_button.hide()
         
         # Main layout
         layout = QVBoxLayout()
         layout.addLayout(search_layout)
-        layout.addLayout(info_layout)
         layout.addLayout(button_layout)
-        layout.addLayout(bottom_button_layout)
         layout.addLayout(info_layout)
-         
+        layout.addWidget(self.set_current_blog_button) # Add button below info
+        
         widget = QWidget()
         widget.setLayout(layout)
         self.setCentralWidget(widget)
@@ -87,7 +74,7 @@ class SearchBlogGUI(QMainWindow):
         self.display_blog = self.controller.blog_dao_json.search_blog(key)
         if self.display_blog:
             self.fill()
-            self.set_current_blog_button.setEnabled(True) # Enable buttons when blog found
+            self.set_current_blog_button.show() # Show button when blog found
         else:
             QMessageBox.warning(self, "Error", "No blogs exist with the given ID.")
             self.set_current_blog_button.hide() # Hide if no blog found
@@ -104,8 +91,4 @@ class SearchBlogGUI(QMainWindow):
     
     def set_current_blog(self):
         self.controller.current_blog = self.display_blog
-        self.blog_menu_button.setEnabled(True)
         QMessageBox.information(self, "Success", f"Current blog set to: {self.display_blog.name}")
-
-    def blog_menu(self):
-        self.blog_menu_gui.show()

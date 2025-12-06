@@ -8,7 +8,6 @@ from PyQt6.QtCore import Qt
 from blogging.controller import Controller, IllegalOperationException
 from blogging.gui.create_blog_gui import CreateBlogGUI
 from blogging.gui.delete_blog_gui import DeleteBlogGUI
-from blogging.gui.edit_blog_gui import EditBlogGUI
 from blogging.gui.list_blogs_gui import ListBlogsGUI
 from blogging.gui.retrieve_blogs_gui import RetrieveBlogsGUI
 from blogging.gui.search_blog_gui import SearchBlogGUI
@@ -21,13 +20,10 @@ class MainMenuGUI(QMainWindow):
         self.login_menu = login_menu # Root BloggingGUI object, i.e. the login menu.
         self.setWindowTitle("Main Menu")
         self.setMinimumSize(600, 400)
-        
-
 
         self.create_blog_gui = CreateBlogGUI(controller)
         self.search_blog_gui = SearchBlogGUI(controller)
         self.delete_blog_gui = DeleteBlogGUI(controller)
-        self.edit_blog_gui = EditBlogGUI(controller)
         self.list_blogs_gui = ListBlogsGUI(controller)
         self.retrieve_blogs_gui = RetrieveBlogsGUI(controller)
         self.update_blog_gui = UpdateBlogGUI(controller)
@@ -36,18 +32,16 @@ class MainMenuGUI(QMainWindow):
 
         self.create_blog_button = QPushButton("Create a blog")
         self.create_blog_button.setFixedSize(600, 50)
-        self.search_blog_button = QPushButton("Search for a blog by ID")
+        self.search_blog_button = QPushButton("Search and set current blog")
         self.search_blog_button.setFixedSize(600, 50)
         self.retrieve_blogs_button = QPushButton("Retrieve blogs by name")
         self.retrieve_blogs_button.setFixedSize(600, 50)
-        self.update_blog_button = QPushButton("Change a blog's data")
+        self.update_blog_button = QPushButton("Update a blog")
         self.update_blog_button.setFixedSize(600, 50)
         self.delete_blog_button = QPushButton("Remove a blog")
         self.delete_blog_button.setFixedSize(600, 50)
         self.list_blogs_button = QPushButton("List all blogs")
         self.list_blogs_button.setFixedSize(600, 50)
-        self.edit_blog_button = QPushButton("Edit blog")
-        self.edit_blog_button.setFixedSize(600, 50)
         self.log_out_button = QPushButton("Log out")
         self.log_out_button.setFixedSize(600, 50)
         
@@ -57,7 +51,6 @@ class MainMenuGUI(QMainWindow):
         main_menu_layout.addWidget(self.update_blog_button)
         main_menu_layout.addWidget(self.delete_blog_button)
         main_menu_layout.addWidget(self.list_blogs_button)
-        main_menu_layout.addWidget(self.edit_blog_button)
         main_menu_layout.addWidget(self.log_out_button)
 
         widget = QWidget()
@@ -70,7 +63,6 @@ class MainMenuGUI(QMainWindow):
         self.update_blog_button.clicked.connect(self.update_blog)
         self.delete_blog_button.clicked.connect(self.delete_blog)
         self.list_blogs_button.clicked.connect(self.list_blogs)
-        self.edit_blog_button.clicked.connect(self.edit_blog)
         self.log_out_button.clicked.connect(self.log_out)
 
     def create_blog(self):
@@ -90,9 +82,6 @@ class MainMenuGUI(QMainWindow):
 
     def list_blogs(self):
         self.list_blogs_gui.show()
-
-    def edit_blog(self):
-        self.edit_blog_gui.show()
 
     def log_out(self):
         self.login_menu.show()
