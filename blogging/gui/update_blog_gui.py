@@ -13,3 +13,141 @@ class UpdateBlogGUI(QMainWindow):
         self.controller = controller
         self.setWindowTitle("Update a Blog")
         self.resize(600, 200)
+        
+        #info
+        info_layout = QGridLayout()
+
+        blog_id_label = QLabel("Blog's ID:")
+        self.blog_id_text = QLineEdit()
+        id_clear_button = QPushButton("Clear ID")
+        id_clear_button.clicked.connect(self.clear_id)
+        blog_name_label = QLabel("Blog's Name:")
+        self.blog_name_text = QLineEdit()
+        name_clear_button = QPushButton("Clear Name")
+        name_clear_button.clicked.connect(self.clear_name)
+        blog_url_label = QLabel("Blog's URL:")
+        self.blog_url_text = QLineEdit()
+        url_clear_button = QPushButton("Clear URL")
+        url_clear_button.clicked.connect(self.clear_url)
+        blog_email_label = QLabel("Blog's Email:")
+        self.blog_email_text = QLineEdit()
+        email_clear_button = QPushButton("Clear Email")
+        email_clear_button.clicked.connect(self.clear_email)
+
+        info_layout.addWidget(blog_id_label, 0, 0)
+        info_layout.addWidget(self.blog_id_text, 0, 1)
+        info_layout.addWidget(id_clear_button, 0, 2)
+        info_layout.addWidget(blog_name_label, 1, 0)
+        info_layout.addWidget(self.blog_name_text, 1, 1)
+        info_layout.addWidget(name_clear_button, 1, 2)
+        info_layout.addWidget(blog_url_label, 2, 0)
+        info_layout.addWidget(self.blog_url_text, 2, 1)
+        info_layout.addWidget(url_clear_button, 2, 2)
+        info_layout.addWidget(blog_email_label, 3, 0)
+        info_layout.addWidget(self.blog_email_text, 3, 1)
+        info_layout.addWidget(email_clear_button, 3, 2)
+        
+        #buttons
+        button_layout = QHBoxLayout()
+
+        search_button = QPushButton("Search")
+        search_button.clicked.connect(self.search)
+        exit_button = QPushButton("Exit")
+        exit_button.clicked.connect(self.exit)
+        update_button = QPushButton("Update")
+        update_button.clicked.connect(self.update)
+        button_layout.addWidget(search_button)
+        button_layout.addWidget(exit_button)
+        button_layout.addWidget(update_button)
+        
+        #search
+        search_layout = QHBoxLayout()
+        
+        blog_id_label_search = QLabel("To update a Blog, please enter it's ID:")
+        self.blog_id_text_search = QLineEdit()
+        search_layout.addWidget(blog_id_label_search)
+        search_layout.addWidget(self.blog_id_text_search)
+
+        #main
+        layout = QVBoxLayout()
+        
+        top_widget = QWidget()
+        top_widget.setLayout(search_layout) 
+        middle_widget = QWidget()
+        middle_widget.setLayout(button_layout)
+        bottom_widget = QWidget()
+        bottom_widget.setLayout(info_layout)
+
+        layout.addWidget(top_widget)
+        layout.addWidget(middle_widget)
+        layout.addWidget(bottom_widget)
+        
+        widget = QWidget()
+        widget.setLayout(layout)
+        self.setCentralWidget(widget)
+
+    def search(self):
+        try:
+            key = int(self.blog_id_text_search.text())
+        except:
+            QMessageBox.warning(self, "Error", "Not a valid id")
+            return
+        
+        blog = self.controller.blog_dao_json.search_blog(key)
+        if blog is not None:
+            self.fill(blog)
+        else:
+            QMessageBox.warning(self, "Error", "No blogs exist with the given id")
+            return
+
+    def exit(self):
+        self.close()
+
+    def fill(self, blog):
+        self.blog_id_text.setText(str(blog.id))
+        self.blog_email_text.setText(blog.email)
+        self.blog_name_text.setText(blog.name)
+        self.blog_url_text.setText(blog.url)
+
+    def clear_name(self):
+        self.blog_name_text.setText("")
+        return
+
+    def clear_id(self):
+        self.blog_id_text.setText("")
+        return
+
+    def clear_email(self):
+        self.blog_email_text.setText("")
+        return
+
+    def clear_url(self):
+        self.blog_url_text.setText("")
+        return
+
+    def update(self):
+        try:
+            id = int(self.blog_id_text_search.text())
+            key = int(self.blog_id_text.text())
+            old_blog = self.controller.blog_dao_json.search_blog(id)
+            existing_blog = self.controller.blog_dao_json.search_blog(key)
+            
+            #changes
+            name = self.blog_name_text.text()
+            email = self.blog_email_text.text()
+            url = self.blog_url_text.text()
+
+            #Checks for a blog with the new ID
+            if existing_blog is not None and existing_blog is not old_blog:
+                QMessageBox.warning(self, "Error", "There is already an existing blog with that id")
+                return
+            
+            reply = QMessageBox.question(self, "Confirm", "Are you sure you want to make these changes?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            if reply == QMessageBox.StandardButton.Yes:
+                self.controller.update_blog(id, key, name, url, email)
+                self.blog_id_text_search.setText(str(key))
+                return
+            return
+        except:
+            QMessageBox.warning(self, "Error", "Not a valid id")
+            return
