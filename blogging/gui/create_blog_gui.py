@@ -59,6 +59,7 @@ class CreateBlogGUI(QMainWindow):
         self.setCentralWidget(widget)
 
     def exit(self):
+        self.clear()
         self.close()
 
     def create(self):

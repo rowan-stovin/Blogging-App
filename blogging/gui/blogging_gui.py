@@ -59,11 +59,15 @@ class BloggingGUI(QMainWindow):
             username = self.username_text.text()
             password = self.password_text.text()
             self.controller.login(username, password)
+            self.clear()
             self.hide() # Hide the login menu when user logs in.
             self.main_menu_gui.show()
         except InvalidLoginException:
             QMessageBox.warning(self, "Error", "Wrong username or password, please try again.")
 
+    def clear(self):
+        self.password_text.setText("")
+        self.username_text.setText("")
           
 def main():
     app = QApplication(sys.argv)

@@ -101,4 +101,6 @@ class RetrieveBlogsGUI(QMainWindow):
             self.model.appendRow(row_items)
 
     def exit(self):
+        self.line_edit.setText("")
+        self.clear_retrieved_blogs()
         self.close()

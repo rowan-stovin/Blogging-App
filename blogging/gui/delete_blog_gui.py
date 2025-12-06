@@ -94,6 +94,7 @@ class DeleteBlogGUI(QMainWindow):
             return
 
     def exit(self):
+        self.unfill()
         self.close()
 
     def fill(self, blog):
@@ -103,6 +104,7 @@ class DeleteBlogGUI(QMainWindow):
         self.blog_url_text.setText(blog.url)
 
     def unfill(self):
+        self.blog_id_text_search.setText("")
         self.blog_id_text.setText("")
         self.blog_email_text.setText("")
         self.blog_name_text.setText("")

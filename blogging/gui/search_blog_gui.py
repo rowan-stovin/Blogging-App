@@ -100,6 +100,7 @@ class SearchBlogGUI(QMainWindow):
             return
     
     def exit(self):
+        self.unfill()
         self.close()
     
     def fill(self):
@@ -107,6 +108,13 @@ class SearchBlogGUI(QMainWindow):
         self.blog_email_text.setText(self.display_blog.email)
         self.blog_name_text.setText(self.display_blog.name)
         self.blog_url_text.setText(self.display_blog.url)
+
+    def unfill(self):
+        self.blog_id_text_search.setText("")
+        self.blog_id_text.setText("")
+        self.blog_email_text.setText("")
+        self.blog_name_text.setText("")
+        self.blog_url_text.setText("")
     
     def set_current_blog(self):
         self.controller.current_blog = self.display_blog

@@ -71,4 +71,9 @@ class BlogMenuGUI(QMainWindow):
         self.exit_button.clicked.connect(self.exit)
 
     def exit(self):
+        self.create_post_gui.close()
+        self.retrieve_posts_gui.close()
+        self.update_post_gui.close()
+        self.list_posts_gui.close()
+        self.remove_post_gui.close()
         self.close()

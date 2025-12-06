@@ -93,4 +93,10 @@ class MainMenuGUI(QMainWindow):
     def log_out(self):
         self.login_menu.show()
         self.controller.logged = False
+        self.create_blog_gui.close()
+        self.search_blog_gui.close()
+        self.retrieve_blogs_gui.close()
+        self.update_blog_gui.close()
+        self.delete_blog_gui.close()
+        self.list_blogs_gui.close()
         self.close()

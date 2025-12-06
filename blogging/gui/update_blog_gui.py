@@ -106,6 +106,7 @@ class UpdateBlogGUI(QMainWindow):
             return
 
     def exit(self):
+        self.unfill()
         self.close()
 
     def fill(self, blog):
@@ -113,6 +114,13 @@ class UpdateBlogGUI(QMainWindow):
         self.blog_email_text.setText(blog.email)
         self.blog_name_text.setText(blog.name)
         self.blog_url_text.setText(blog.url)
+
+    def unfill(self):
+        self.blog_id_text_search.setText("")
+        self.blog_id_text.setText("")
+        self.blog_email_text.setText("")
+        self.blog_name_text.setText("")
+        self.blog_url_text.setText("")
 
     def clear_name(self):
         self.blog_name_text.setText("")
