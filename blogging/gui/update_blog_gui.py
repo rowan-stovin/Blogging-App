@@ -138,7 +138,7 @@ class UpdateBlogGUI(QMainWindow):
             url = self.blog_url_text.text()
 
             #Checks for a blog with the new ID
-            if existing_blog is not None and existing_blog is not old_blog:
+            if existing_blog and existing_blog is not old_blog:
                 QMessageBox.warning(self, "Error", "There is already an existing blog with that id")
                 return
             elif old_blog == self.controller.current_blog:
