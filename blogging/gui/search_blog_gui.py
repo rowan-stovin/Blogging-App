@@ -51,12 +51,12 @@ class SearchBlogGUI(QMainWindow):
         info_layout.addWidget(blog_email_label, 3, 0)
         info_layout.addWidget(self.blog_email_text, 3, 1)
         
-        # Set Current Blog button (initially hidden)
+        # Set Current Blog button (initially disabled)
         self.set_current_blog_button = QPushButton("Set Current Blog")
         self.set_current_blog_button.clicked.connect(self.set_current_blog)
         self.set_current_blog_button.setEnabled(False)
 
-        # Blog menu button (initially hidden)
+        # Blog menu button (initially disabled)
         self.blog_menu_button = QPushButton("Blog Menu")
         self.blog_menu_button.clicked.connect(self.blog_menu)
         self.blog_menu_button.setEnabled(False)
@@ -65,13 +65,12 @@ class SearchBlogGUI(QMainWindow):
         bottom_button_layout.addWidget(self.set_current_blog_button)
         bottom_button_layout.addWidget(self.blog_menu_button)
         
-        # Main layout
+        # Main layout - Fixed: removed duplicate info_layout
         layout = QVBoxLayout()
         layout.addLayout(search_layout)
-        layout.addLayout(info_layout)
         layout.addLayout(button_layout)
+        layout.addLayout(info_layout)  # Only added once now
         layout.addLayout(bottom_button_layout)
-        layout.addLayout(info_layout)
          
         widget = QWidget()
         widget.setLayout(layout)
@@ -87,10 +86,12 @@ class SearchBlogGUI(QMainWindow):
         self.display_blog = self.controller.blog_dao_json.search_blog(key)
         if self.display_blog:
             self.fill()
-            self.set_current_blog_button.setEnabled(True) # Enable buttons when blog found
+            self.set_current_blog_button.setEnabled(True)  # Enable button when blog found
+            self.blog_menu_button.setEnabled(False)  # Disable blog menu until current blog is set
         else:
             QMessageBox.warning(self, "Error", "No blogs exist with the given ID.")
-            self.set_current_blog_button.hide() # Hide if no blog found
+            self.set_current_blog_button.setEnabled(False)  # Disable if no blog found
+            self.blog_menu_button.setEnabled(False)
             return
     
     def exit(self):
