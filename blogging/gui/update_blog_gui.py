@@ -137,19 +137,21 @@ class UpdateBlogGUI(QMainWindow):
             email = self.blog_email_text.text()
             url = self.blog_url_text.text()
 
-            #Checks for a blog with the new ID
-            if existing_blog and existing_blog is not old_blog:
+            #Checks for a blog with the new ID or if it is the current blog
+            if existing_blog is None or id == key:
+                reply = QMessageBox.question(self, "Confirm", "Are you sure you want to make these changes?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+                if reply == QMessageBox.StandardButton.Yes:
+                    self.controller.update_blog(id, key, name, url, email)
+                    self.blog_id_text_search.setText(str(key))
+                    return
+            elif existing_blog is not None and existing_blog is not old_blog:
                 QMessageBox.warning(self, "Error", "There is already an existing blog with that id")
                 return
+
             elif old_blog == self.controller.current_blog:
                 QMessageBox.warning(self, "Error", "Cannot update the current blog")
                 return
             
-            reply = QMessageBox.question(self, "Confirm", "Are you sure you want to make these changes?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-            if reply == QMessageBox.StandardButton.Yes:
-                self.controller.update_blog(id, key, name, url, email)
-                self.blog_id_text_search.setText(str(key))
-                return
             return
         except:
             QMessageBox.warning(self, "Error", "Not a valid id")
