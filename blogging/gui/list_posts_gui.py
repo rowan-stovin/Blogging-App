@@ -35,9 +35,6 @@ class ListPostsGUI(QMainWindow):
         layout.addWidget(self.text_display)
         layout.addLayout(button_layout) # Add the horizontal button layout
         
-        # Populate on initialization
-        self.populate_posts()
-        
     def populate_posts(self):
         """Populate the text display with all posts from current blog"""
         if not self.controller.current_blog:
@@ -61,3 +58,10 @@ class ListPostsGUI(QMainWindow):
             output.append("")  # Empty line between posts
         
         self.text_display.setPlainText("\n".join(output))
+
+
+    def showEvent(self, event):
+        """Called whenever the window is shown"""
+        super().showEvent(event)
+        # This kind of makes the refresh redundant...
+        self.populate_posts()

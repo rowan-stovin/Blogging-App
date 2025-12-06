@@ -38,13 +38,17 @@ class RemovePostGUI(QMainWindow):
         self.setCentralWidget(widget)
     
     def remove(self):
+        code = None
         try:
             code = int(self.post_code_text.text())
         except ValueError:
             QMessageBox.warning(self, "Error", f"That wasn't a valid post code")
+            return
 
         if self.controller.current_blog.post_dao_pickle.delete_post(code):
             QMessageBox.information(self, "Success", f"The post was deleted")
+            self.post_code_text.setText("")
+            self.close()
         else:
             QMessageBox.warning(self, "Error", f"That post does not exist in the current blog")
 
