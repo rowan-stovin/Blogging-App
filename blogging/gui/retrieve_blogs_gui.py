@@ -61,6 +61,7 @@ class RetrieveBlogsGUI(QMainWindow):
         self.table_view.setSelectionMode(QTableView.SelectionMode.SingleSelection)
     
     def on_search(self):
+        """ Searches for the blogs with the provided str in title"""
         search_string = self.line_edit.text()
         search_string = search_string.strip()
         blogs = self.controller.blog_dao_json.retrieve_blogs(search_string)
@@ -72,10 +73,12 @@ class RetrieveBlogsGUI(QMainWindow):
         self.show_retrieved_blogs(blogs)
 
     def clear_retrieved_blogs(self):
+        """ Clears data"""
         # Clear existing data
         self.model.removeRows(0, self.model.rowCount())
     
     def show_retrieved_blogs(self, blogs):
+        """ Fills the table and resizes it"""
         self.clear_retrieved_blogs()
 
         # Populate with new data
@@ -85,6 +88,7 @@ class RetrieveBlogsGUI(QMainWindow):
         self.table_view.resizeColumnsToContents()
     
     def populate_table(self, blogs):
+        """ Fills the table"""
         # Add rows to the model
         for blog in blogs:
 
@@ -101,6 +105,7 @@ class RetrieveBlogsGUI(QMainWindow):
             self.model.appendRow(row_items)
 
     def exit(self):
+        """ Clears text and closes the window"""
         self.line_edit.setText("")
         self.clear_retrieved_blogs()
         self.close()

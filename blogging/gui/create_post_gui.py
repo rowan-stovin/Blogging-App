@@ -48,6 +48,7 @@ class CreatePostGUI(QMainWindow):
         layout.addLayout(button_layout)
     
     def exit(self):
+        self.clear_form()
         self.close()
     
     def create(self):

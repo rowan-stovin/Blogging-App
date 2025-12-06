@@ -49,14 +49,16 @@ class ListBlogsGUI(QMainWindow):
         self.layout.addWidget(button_widget)
 
     def exit(self):
+        """Closes the window"""
         self.close()
         
     def refresh_table(self):
-        # Clear existing data
+        """ Clears the existing data"""
         self.model.removeRows(0, self.model.rowCount())
         self.populate_table()
 
     def populate_table(self):
+        """ Fills in the data"""
         blogs = self.controller.blog_dao_json.list_blogs()
         # Add rows to the model
         for blog in blogs:

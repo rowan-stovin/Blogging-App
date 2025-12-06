@@ -63,6 +63,8 @@ class CreateBlogGUI(QMainWindow):
         self.close()
 
     def create(self):
+        """ Creates the Blog"""
+        # Ensures a valid ID is entered
         try:
             id = int(self.blog_id_text.text())
         except:
@@ -79,10 +81,12 @@ class CreateBlogGUI(QMainWindow):
         blog = Blog(id, name, url, email)
         self.controller.blog_dao_json.create_blog(blog)
         QMessageBox.information(self, "Success", "The blog was created successfully")
+        
         self.clear()
         self.close()
 
     def clear(self):
+        """ Clears the fields"""
         self.blog_email_text.setText("")
         self.blog_id_text.setText("")
         self.blog_name_text.setText("")

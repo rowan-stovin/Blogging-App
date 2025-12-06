@@ -82,6 +82,7 @@ class SearchBlogGUI(QMainWindow):
         self.setCentralWidget(widget)
     
     def search(self):
+        """ Searches for the blog with the given id"""
         try:
             key = int(self.blog_id_text_search.text())
         except ValueError:
@@ -100,16 +101,19 @@ class SearchBlogGUI(QMainWindow):
             return
     
     def exit(self):
+        """ Clears the fields and closes the window"""
         self.unfill()
         self.close()
     
     def fill(self):
+        """ Fills the fields"""
         self.blog_id_text.setText(str(self.display_blog.id))
         self.blog_email_text.setText(self.display_blog.email)
         self.blog_name_text.setText(self.display_blog.name)
         self.blog_url_text.setText(self.display_blog.url)
 
     def unfill(self):
+        """ Clears the fields"""
         self.blog_id_text_search.setText("")
         self.blog_id_text.setText("")
         self.blog_email_text.setText("")
@@ -117,9 +121,11 @@ class SearchBlogGUI(QMainWindow):
         self.blog_url_text.setText("")
     
     def set_current_blog(self):
+        """ Sets current blog"""
         self.controller.current_blog = self.display_blog
         self.blog_menu_button.setEnabled(True)
         QMessageBox.information(self, "Success", f"Current blog set to: {self.display_blog.name}")
 
     def blog_menu(self):
+        """ Opens the blog menu"""
         self.blog_menu_gui.show()

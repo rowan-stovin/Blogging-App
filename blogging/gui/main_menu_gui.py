@@ -21,6 +21,7 @@ class MainMenuGUI(QMainWindow):
         self.setWindowTitle("Main Menu")
         self.setMinimumSize(900, 400)
 
+        # All the associated blog windows
         self.create_blog_gui = CreateBlogGUI(controller)
         self.search_blog_gui = SearchBlogGUI(controller)
         self.delete_blog_gui = DeleteBlogGUI(controller)
@@ -28,6 +29,7 @@ class MainMenuGUI(QMainWindow):
         self.retrieve_blogs_gui = RetrieveBlogsGUI(controller)
         self.update_blog_gui = UpdateBlogGUI(controller)
 
+        # Main layout
         main_menu_layout = QGridLayout()
 
         self.create_blog_button = QPushButton("Create a blog")
@@ -52,6 +54,7 @@ class MainMenuGUI(QMainWindow):
         main_menu_layout.addWidget(self.delete_blog_button, 1, 1)
         main_menu_layout.addWidget(self.list_blogs_button, 1, 2)
        
+        # Second layout to align button nicely
         bot_buttons = QHBoxLayout()
         bot_buttons.addWidget(self.log_out_button)
 
@@ -60,10 +63,12 @@ class MainMenuGUI(QMainWindow):
         main_menu_layout.addWidget(button_widget, 2, 0, 1, 3)
         main_menu_layout.setAlignment(button_widget, Qt.AlignmentFlag.AlignTop)
 
+        # Sets the layout
         widget = QWidget()
         widget.setLayout(main_menu_layout)
         self.setCentralWidget(widget)
 
+        # Connecting the buttons
         self.create_blog_button.clicked.connect(self.create_blog)
         self.search_blog_button.clicked.connect(self.search_blog)
         self.retrieve_blogs_button.clicked.connect(self.retrieve_blogs)
@@ -73,24 +78,31 @@ class MainMenuGUI(QMainWindow):
         self.log_out_button.clicked.connect(self.log_out)
 
     def create_blog(self):
+        """ Opens the create blog menu"""
         self.create_blog_gui.show()
 
     def search_blog(self):
+        """ Opens the search blog menu"""
         self.search_blog_gui.show()
 
     def retrieve_blogs(self):
+        """ Opens the retrieve blogs menu"""
         self.retrieve_blogs_gui.show()
 
     def update_blog(self):
+        """ Opens update blog menu"""
         self.update_blog_gui.show()
 
     def delete_blog(self):
+        """ Opens delete blog menu"""
         self.delete_blog_gui.show()
 
     def list_blogs(self):
+        """ Opens list blog menu"""
         self.list_blogs_gui.show()
 
     def log_out(self):
+        """ Closes all windows and opens the log in menu"""
         self.login_menu.show()
         self.controller.logged = False
         self.create_blog_gui.close()

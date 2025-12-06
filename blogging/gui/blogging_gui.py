@@ -20,8 +20,9 @@ class BloggingGUI(QMainWindow):
 
         self.setWindowTitle("BLOGGING SYSTEM")
         self.setMinimumSize(600, 200)
-
         main_layout = QVBoxLayout()
+        
+        # Login info layout
         login_layout = QGridLayout()
 
         self.username_label = QLabel("Username")
@@ -34,7 +35,7 @@ class BloggingGUI(QMainWindow):
         login_layout.addWidget(self.password_label)
         login_layout.addWidget(self.password_text)
         
-        main_layout.addStretch()
+        # Button layout
         button_layout = QHBoxLayout()
         
         self.button_log_in = QPushButton("Log In")
@@ -47,14 +48,17 @@ class BloggingGUI(QMainWindow):
         main_layout.addLayout(login_layout)
         main_layout.addLayout(button_layout)
 
+        # Set the main layout
         widget = QWidget()
         widget.setLayout(main_layout)
         self.setCentralWidget(widget)
 
+        # Connect Buttons
         self.button_log_in.clicked.connect(self.login_menu)
         self.button_Quit.clicked.connect(self.close)
 
     def login_menu(self):
+        """Logs in the user if correct username and password"""
         try:
             username = self.username_text.text()
             password = self.password_text.text()
@@ -66,6 +70,7 @@ class BloggingGUI(QMainWindow):
             QMessageBox.warning(self, "Error", "Wrong username or password, please try again.")
 
     def clear(self):
+        """Clears all fields"""
         self.password_text.setText("")
         self.username_text.setText("")
           

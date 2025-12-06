@@ -92,6 +92,7 @@ class UpdateBlogGUI(QMainWindow):
         self.setCentralWidget(widget)
 
     def search(self):
+        """ Searches for the blog with the given id"""
         try:
             key = int(self.blog_id_text_search.text())
         except:
@@ -106,16 +107,19 @@ class UpdateBlogGUI(QMainWindow):
             return
 
     def exit(self):
+        """ Clears the fields"""
         self.unfill()
         self.close()
 
     def fill(self, blog):
+        """ Fills all the fields"""
         self.blog_id_text.setText(str(blog.id))
         self.blog_email_text.setText(blog.email)
         self.blog_name_text.setText(blog.name)
         self.blog_url_text.setText(blog.url)
 
     def unfill(self):
+        """ Clears all the fields"""
         self.blog_id_text_search.setText("")
         self.blog_id_text.setText("")
         self.blog_email_text.setText("")
@@ -123,22 +127,27 @@ class UpdateBlogGUI(QMainWindow):
         self.blog_url_text.setText("")
 
     def clear_name(self):
+        """ Clears name"""
         self.blog_name_text.setText("")
         return
 
     def clear_id(self):
+        """ Clears the id"""
         self.blog_id_text.setText("")
         return
 
     def clear_email(self):
+        """ Clears the email"""
         self.blog_email_text.setText("")
         return
 
     def clear_url(self):
+        """ Clears the URL"""
         self.blog_url_text.setText("")
         return
     
     def clear_all(self):
+        """ Clears all fields"""
         self.blog_id_text_search.setText("")
         self.clear_name()
         self.clear_id()
@@ -146,6 +155,7 @@ class UpdateBlogGUI(QMainWindow):
         self.clear_url()
 
     def update(self):
+        """ Updates the blog with the new info"""
         try:
             id = int(self.blog_id_text_search.text())
             key = int(self.blog_id_text.text())

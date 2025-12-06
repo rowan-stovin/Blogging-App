@@ -19,12 +19,14 @@ class BlogMenuGUI(QMainWindow):
         self.setWindowTitle("Blog Menu")
         self.resize(600, 200)
 
+        # Other Windows
         self.create_post_gui = CreatePostGUI(controller)
         self.retrieve_posts_gui = RetrievePostsGUI(controller)
         self.update_post_gui = UpdatePostGUI(controller)
         self.list_posts_gui = ListPostsGUI(controller)
         self.remove_post_gui = RemovePostGUI(controller)
-
+        
+        #initialize the main window
         main_menu_layout = QGridLayout()
         widget = QWidget()
         widget.setLayout(main_menu_layout)
@@ -71,6 +73,7 @@ class BlogMenuGUI(QMainWindow):
         self.exit_button.clicked.connect(self.exit)
 
     def exit(self):
+        """Exits this window and closes all blog related windows"""    
         self.create_post_gui.close()
         self.retrieve_posts_gui.close()
         self.update_post_gui.close()

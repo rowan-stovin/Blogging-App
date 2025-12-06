@@ -94,16 +94,19 @@ class DeleteBlogGUI(QMainWindow):
             return
 
     def exit(self):
+        """ Clears fields and closes the window"""
         self.unfill()
         self.close()
 
     def fill(self, blog):
+        """ Fills the fields"""
         self.blog_id_text.setText(str(blog.id))
         self.blog_email_text.setText(blog.email)
         self.blog_name_text.setText(blog.name)
         self.blog_url_text.setText(blog.url)
 
     def unfill(self):
+        """ Clears the fields"""
         self.blog_id_text_search.setText("")
         self.blog_id_text.setText("")
         self.blog_email_text.setText("")
@@ -111,10 +114,11 @@ class DeleteBlogGUI(QMainWindow):
         self.blog_url_text.setText("")
 
     def delete(self):
-        
+        """ Deletes a Blog"""
         try:
             id = int(self.blog_id_text_search.text())
             
+            # Check for existing blog
             if self.controller.blog_dao_json.search_blog(id) is None:
                 QMessageBox.warning(self, "Error", "Blog doesn't exist")
                 return
@@ -129,9 +133,8 @@ class DeleteBlogGUI(QMainWindow):
             elif self.controller.current_blog.id == id:
                 QMessageBox.warning(self, "Error", "Cannot delete the current blog")
                 return
-            
-            
             return
+        
         except:
             QMessageBox.warning(self, "Error", "Not a valid id")
             return
