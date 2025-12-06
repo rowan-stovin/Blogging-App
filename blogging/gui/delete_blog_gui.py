@@ -86,6 +86,7 @@ class DeleteBlogGUI(QMainWindow):
             self.fill(blog)
         else:
             QMessageBox.warning(self, "Error", "No blogs exist with the given id")
+            self.unfill()
             return
 
     def exit(self):
@@ -108,16 +109,22 @@ class DeleteBlogGUI(QMainWindow):
         try:
             id = int(self.blog_id_text_search.text())
             
+            if self.controller.blog_dao_json.search_blog(id) is None:
+                QMessageBox.warning(self, "Error", "Blog doesn't exist")
+                return
+
             #cannot delete the current blog
-            if self.controller.current_blog.id == id:
+            if self.controller.current_blog is None:
+                reply = QMessageBox.question(self, "Confirm", "Are you sure you want to delete this blog?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+                if reply == QMessageBox.StandardButton.Yes:
+                    self.controller.blog_dao_json.delete_blog(id)
+                    self.unfill()
+                return
+            elif self.controller.current_blog.id == id:
                 QMessageBox.warning(self, "Error", "Cannot delete the current blog")
                 return
             
-            reply = QMessageBox.question(self, "Confirm", "Are you sure you want to delete this blog?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-            if reply == QMessageBox.StandardButton.Yes:
-                self.controller.blog_dao_json.delete_blog(id)
-                self.unfill()
-                return
+            
             return
         except:
             QMessageBox.warning(self, "Error", "Not a valid id")
