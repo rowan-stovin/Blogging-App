@@ -104,8 +104,15 @@ class DeleteBlogGUI(QMainWindow):
         self.blog_url_text.setText("")
 
     def delete(self):
+        
         try:
             id = int(self.blog_id_text_search.text())
+            
+            #cannot delete the current blog
+            if self.controller.current_blog.id == id:
+                QMessageBox.warning(self, "Error", "Cannot delete the current blog")
+                return
+            
             reply = QMessageBox.question(self, "Confirm", "Are you sure you want to delete this blog?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if reply == QMessageBox.StandardButton.Yes:
                 self.controller.blog_dao_json.delete_blog(id)

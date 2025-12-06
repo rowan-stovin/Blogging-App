@@ -141,6 +141,9 @@ class UpdateBlogGUI(QMainWindow):
             if existing_blog is not None and existing_blog is not old_blog:
                 QMessageBox.warning(self, "Error", "There is already an existing blog with that id")
                 return
+            elif old_blog == self.controller.current_blog:
+                QMessageBox.warning(self, "Error", "Cannot update the current blog")
+                return
             
             reply = QMessageBox.question(self, "Confirm", "Are you sure you want to make these changes?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if reply == QMessageBox.StandardButton.Yes:
