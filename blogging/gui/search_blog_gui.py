@@ -56,8 +56,9 @@ class SearchBlogGUI(QMainWindow):
         # Main layout
         layout = QVBoxLayout()
         layout.addLayout(search_layout)
-        layout.addLayout(button_layout)
         layout.addLayout(info_layout)
+        layout.addLayout(button_layout)
+        
         layout.addWidget(self.set_current_blog_button) # Add button below info
         
         widget = QWidget()

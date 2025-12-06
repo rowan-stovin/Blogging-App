@@ -32,10 +32,15 @@ class RetrieveBlogsGUI(QMainWindow):
         self.search_button = QPushButton("Search")
         self.search_button.clicked.connect(self.on_search)
 
+        # Exit button
+        self.exit_button = QPushButton("Exit")
+        self.exit_button.clicked.connect(self.exit)
+        
         # Horizontal layout for buttons
         button_layout = QHBoxLayout()
         button_layout.addWidget(self.clear_button)
         button_layout.addWidget(self.search_button)
+        button_layout.addWidget(self.exit_button)
         self.layout.addLayout(button_layout)
         
         # Table view
@@ -91,3 +96,6 @@ class RetrieveBlogsGUI(QMainWindow):
             for item in row_items:
                 item.setEditable(False)
             self.model.appendRow(row_items)
+
+    def exit(self):
+        self.close()

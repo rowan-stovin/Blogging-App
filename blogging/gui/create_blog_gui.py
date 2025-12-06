@@ -16,13 +16,13 @@ class CreateBlogGUI(QMainWindow):
 
         info_layout = QGridLayout()
 
-        blog_id_label = QLabel("Enter the Blog's ID, you can only use numbers:")
+        blog_id_label = QLabel("Enter the Blog's ID (numbers only):")
         self.blog_id_text = QLineEdit()
-        blog_name_label = QLabel("Enter the Blog's name:")
+        blog_name_label = QLabel("Enter the name of the Blog:")
         self.blog_name_text = QLineEdit()
-        blog_url_label = QLabel("Enter the Blog's URL:")
+        blog_url_label = QLabel("Enter the URL of the Blog:")
         self.blog_url_text = QLineEdit()
-        blog_email_label = QLabel("Enter the Blog's Email:")
+        blog_email_label = QLabel("Enter the Email for the Blog:")
         self.blog_email_text = QLineEdit()
 
         info_layout.addWidget(blog_id_label, 0, 0)
