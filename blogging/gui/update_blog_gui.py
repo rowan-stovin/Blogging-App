@@ -124,6 +124,13 @@ class UpdateBlogGUI(QMainWindow):
     def clear_url(self):
         self.blog_url_text.setText("")
         return
+    
+    def clear_all(self):
+        self.blog_id_text_search.setText("")
+        self.clear_name()
+        self.clear_id()
+        self.clear_email()
+        self.clear_url()
 
     def update(self):
         try:
@@ -138,13 +145,16 @@ class UpdateBlogGUI(QMainWindow):
             url = self.blog_url_text.text()
 
             #Checks for a blog with the new ID or if it is the current blog
-            if existing_blog is None or id == key:
+            if existing_blog or id == key:
                 reply = QMessageBox.question(self, "Confirm", "Are you sure you want to make these changes?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
                 if reply == QMessageBox.StandardButton.Yes:
                     self.controller.update_blog(id, key, name, url, email)
-                    self.blog_id_text_search.setText(str(key))
+                    QMessageBox.information(self, "Success", "The blog was successfully updated")
+                    self.clear_all()
+                    self.close()
+                    # self.blog_id_text_search.setText(str(key))
                     return
-            elif existing_blog is not None and existing_blog is not old_blog:
+            elif existing_blog and existing_blog is not old_blog:
                 QMessageBox.warning(self, "Error", "There is already an existing blog with that id")
                 return
 
