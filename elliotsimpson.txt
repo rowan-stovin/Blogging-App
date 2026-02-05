@@ -1,8 +1,0 @@
-# NetlinkID
-elliotsimpson
-# Name
-Elliot Simpson
-# V Number
-V01060621
-# Contact Email
-elliotsimpson@uvic.ca
