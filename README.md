@@ -46,5 +46,7 @@ pip install PyQt5
 3. Run the application
 Bash
 python3 -m blogging gui
-🧠 Design Philosophy
-This project was developed with a focus on modular architecture. By decoupling the data persistence layer (JSON) from the frontend (PyQt5), the application maintains high readability and allows for easy expansion into SQL or cloud-based storage in future iterations.
+```
+## 🧠 Design Philosophy
+
+This project was developed with a focus on **modular architecture**. By **decoupling** the data persistence layer (JSON) from the frontend (PyQt5), the application maintains high readability and allows for easy expansion into **SQL** or **cloud-based storage** in future iterations.
