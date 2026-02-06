@@ -35,16 +35,15 @@ A robust desktop application built with Python and the PyQt5 framework. This pro
 ---
 
 ## ⚙️ Installation & Usage
-
-### 1. Clone the repository
 ```bash
+1. Clone the repository
 git clone [https://github.com/rowan-stovin/Blogging-App.git](https://github.com/rowan-stovin/Blogging-App.git)
 cd Blogging-App
+
 2. Install dependencies
-Bash
 pip install PyQt5
+
 3. Run the application
-Bash
 python3 -m blogging gui
 ```
 ## 🧠 Design Philosophy
